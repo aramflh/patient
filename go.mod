@@ -1,4 +1,4 @@
-module dossier-patient
+module patient
 
 go 1.20
 
