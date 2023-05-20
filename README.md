@@ -38,7 +38,7 @@ go run <file.go>
 
 - Activate automatic compilation
 ```Shell
-CompileDaemon -command="./dossier-patient"
+CompileDaemon -command="./patient"
 ```
 
 
