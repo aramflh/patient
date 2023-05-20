@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// LoadEnvVariables loads the variables in .env file
+// They then  become accessible with : os.Getenv("ENV_VAR")
 func LoadEnvVariables() {
 	// err loads the environment variables defined in the .env file
 	err := godotenv.Load()

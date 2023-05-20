@@ -13,6 +13,7 @@ import (
 func init() {
 	initializers.LoadEnvVariables()
 	initializers.ConnectToDB()
+	initializers.GenStructFromDB()
 }
 
 func main() {
