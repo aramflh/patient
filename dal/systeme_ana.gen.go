@@ -36,7 +36,7 @@ func newSystemeAna(db *gorm.DB, opts ...gen.DOOption) systemeAna {
 }
 
 type systemeAna struct {
-	systemeAnaDo systemeAnaDo
+	systemeAnaDo
 
 	ALL           field.Asterisk
 	NomSysAna     field.String
@@ -64,14 +64,6 @@ func (s *systemeAna) updateTableName(table string) *systemeAna {
 
 	return s
 }
-
-func (s *systemeAna) WithContext(ctx context.Context) *systemeAnaDo {
-	return s.systemeAnaDo.WithContext(ctx)
-}
-
-func (s systemeAna) TableName() string { return s.systemeAnaDo.TableName() }
-
-func (s systemeAna) Alias() string { return s.systemeAnaDo.Alias() }
 
 func (s *systemeAna) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := s.fieldMap[fieldName]

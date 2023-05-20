@@ -40,7 +40,7 @@ func newPharmacien(db *gorm.DB, opts ...gen.DOOption) pharmacien {
 }
 
 type pharmacien struct {
-	pharmacienDo pharmacienDo
+	pharmacienDo
 
 	ALL        field.Asterisk
 	NInami     field.String
@@ -76,14 +76,6 @@ func (p *pharmacien) updateTableName(table string) *pharmacien {
 
 	return p
 }
-
-func (p *pharmacien) WithContext(ctx context.Context) *pharmacienDo {
-	return p.pharmacienDo.WithContext(ctx)
-}
-
-func (p pharmacien) TableName() string { return p.pharmacienDo.TableName() }
-
-func (p pharmacien) Alias() string { return p.pharmacienDo.Alias() }
 
 func (p *pharmacien) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]

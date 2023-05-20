@@ -39,7 +39,7 @@ func newProSante(db *gorm.DB, opts ...gen.DOOption) proSante {
 }
 
 type proSante struct {
-	proSanteDo proSanteDo
+	proSanteDo
 
 	ALL        field.Asterisk
 	NInami     field.String
@@ -73,12 +73,6 @@ func (p *proSante) updateTableName(table string) *proSante {
 
 	return p
 }
-
-func (p *proSante) WithContext(ctx context.Context) *proSanteDo { return p.proSanteDo.WithContext(ctx) }
-
-func (p proSante) TableName() string { return p.proSanteDo.TableName() }
-
-func (p proSante) Alias() string { return p.proSanteDo.Alias() }
 
 func (p *proSante) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]

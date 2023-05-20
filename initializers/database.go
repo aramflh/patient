@@ -47,11 +47,11 @@ func GenStructFromDB() {
 	// Initialize the generator with configuration
 	g := gen.NewGenerator(gen.Config{
 		// Generate global variable Q as DAO interface, then you can query data like: dal.Q.User.First()
-		Mode: gen.WithDefaultQuery,
+		Mode: gen.WithDefaultQuery | gen.WithoutContext,
 		// Output destination folder for the generator, default value: ./query
 		OutPath: "dal",
 		// Query code file name, default value: gen.go
-		OutFile: "queryCode.go",
+		//OutFile: "queryCode.go",
 		// if you want the nullable field generation property to be pointer type, set FieldNullable true
 		FieldNullable: true,
 		// if you want to assign field which has a default value in the `Create` API, set FieldCoverable true, reference: https://gorm.io/docs/create.html#Default-Values

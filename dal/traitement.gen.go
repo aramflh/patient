@@ -40,7 +40,7 @@ func newTraitement(db *gorm.DB, opts ...gen.DOOption) traitement {
 }
 
 type traitement struct {
-	traitementDo traitementDo
+	traitementDo
 
 	ALL             field.Asterisk
 	DateDebut       field.Time
@@ -76,14 +76,6 @@ func (t *traitement) updateTableName(table string) *traitement {
 
 	return t
 }
-
-func (t *traitement) WithContext(ctx context.Context) *traitementDo {
-	return t.traitementDo.WithContext(ctx)
-}
-
-func (t traitement) TableName() string { return t.traitementDo.TableName() }
-
-func (t traitement) Alias() string { return t.traitementDo.Alias() }
 
 func (t *traitement) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := t.fieldMap[fieldName]

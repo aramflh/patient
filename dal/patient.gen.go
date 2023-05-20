@@ -43,7 +43,7 @@ func newPatient(db *gorm.DB, opts ...gen.DOOption) patient {
 }
 
 type patient struct {
-	patientDo patientDo
+	patientDo
 
 	ALL           field.Asterisk
 	NNiss         field.String
@@ -85,12 +85,6 @@ func (p *patient) updateTableName(table string) *patient {
 
 	return p
 }
-
-func (p *patient) WithContext(ctx context.Context) *patientDo { return p.patientDo.WithContext(ctx) }
-
-func (p patient) TableName() string { return p.patientDo.TableName() }
-
-func (p patient) Alias() string { return p.patientDo.Alias() }
 
 func (p *patient) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]

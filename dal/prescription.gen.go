@@ -40,7 +40,7 @@ func newPrescription(db *gorm.DB, opts ...gen.DOOption) prescription {
 }
 
 type prescription struct {
-	prescriptionDo prescriptionDo
+	prescriptionDo
 
 	ALL             field.Asterisk
 	DateEmission    field.Time
@@ -76,14 +76,6 @@ func (p *prescription) updateTableName(table string) *prescription {
 
 	return p
 }
-
-func (p *prescription) WithContext(ctx context.Context) *prescriptionDo {
-	return p.prescriptionDo.WithContext(ctx)
-}
-
-func (p prescription) TableName() string { return p.prescriptionDo.TableName() }
-
-func (p prescription) Alias() string { return p.prescriptionDo.Alias() }
 
 func (p *prescription) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]

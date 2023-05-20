@@ -36,7 +36,7 @@ func newPathologie(db *gorm.DB, opts ...gen.DOOption) pathologie {
 }
 
 type pathologie struct {
-	pathologieDo pathologieDo
+	pathologieDo
 
 	ALL           field.Asterisk
 	NomPathologie field.String
@@ -64,14 +64,6 @@ func (p *pathologie) updateTableName(table string) *pathologie {
 
 	return p
 }
-
-func (p *pathologie) WithContext(ctx context.Context) *pathologieDo {
-	return p.pathologieDo.WithContext(ctx)
-}
-
-func (p pathologie) TableName() string { return p.pathologieDo.TableName() }
-
-func (p pathologie) Alias() string { return p.pathologieDo.Alias() }
 
 func (p *pathologie) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]

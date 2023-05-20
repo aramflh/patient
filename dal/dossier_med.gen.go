@@ -37,7 +37,7 @@ func newDossierMed(db *gorm.DB, opts ...gen.DOOption) dossierMed {
 }
 
 type dossierMed struct {
-	dossierMedDo dossierMedDo
+	dossierMedDo
 
 	ALL            field.Asterisk
 	DateDiagnostic field.Time
@@ -67,14 +67,6 @@ func (d *dossierMed) updateTableName(table string) *dossierMed {
 
 	return d
 }
-
-func (d *dossierMed) WithContext(ctx context.Context) *dossierMedDo {
-	return d.dossierMedDo.WithContext(ctx)
-}
-
-func (d dossierMed) TableName() string { return d.dossierMedDo.TableName() }
-
-func (d dossierMed) Alias() string { return d.dossierMedDo.Alias() }
 
 func (d *dossierMed) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := d.fieldMap[fieldName]

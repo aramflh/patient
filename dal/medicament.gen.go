@@ -38,7 +38,7 @@ func newMedicament(db *gorm.DB, opts ...gen.DOOption) medicament {
 }
 
 type medicament struct {
-	medicamentDo medicamentDo
+	medicamentDo
 
 	ALL             field.Asterisk
 	NomMedic        field.String
@@ -70,14 +70,6 @@ func (m *medicament) updateTableName(table string) *medicament {
 
 	return m
 }
-
-func (m *medicament) WithContext(ctx context.Context) *medicamentDo {
-	return m.medicamentDo.WithContext(ctx)
-}
-
-func (m medicament) TableName() string { return m.medicamentDo.TableName() }
-
-func (m medicament) Alias() string { return m.medicamentDo.Alias() }
 
 func (m *medicament) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := m.fieldMap[fieldName]
