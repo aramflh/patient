@@ -41,4 +41,9 @@ go run <file.go>
 CompileDaemon -command="./patient"
 ```
 
+## Project structure
 
+- dal/ :
+- model/ :
+- initializers/ :
+- controllers/ : 
