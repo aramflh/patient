@@ -7,6 +7,7 @@ import (
 	"patient/initializers"
 )
 
+// PharmaciensCreate creates a pharmacien record on the "Pharmacien" table of the DB
 func PharmaciensCreate(c *gin.Context) {
 	// Get data off requests
 	var pharma_data struct {
@@ -27,10 +28,18 @@ func PharmaciensCreate(c *gin.Context) {
 		pharma_data.Prenom,
 		pharma_data.Email,
 		pharma_data.Num)
-	initializers.DB.Exec(querry)
 
-	// Return a patient
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Pharmacien created !",
-	})
+	// Executes the query and get error if exist
+	err := initializers.DB.Exec(querry).Error
+
+	// Check if an error occurred
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": fmt.Sprintf("An error occured: %s", err),
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "Pharmaciens created !",
+		})
+	}
 }

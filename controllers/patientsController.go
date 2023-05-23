@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"patient/initializers"
-	"time"
 )
 
 func PatientsCreate(c *gin.Context) {
@@ -16,7 +15,7 @@ func PatientsCreate(c *gin.Context) {
 		Nom           string
 		Prenom        string
 		Genre         string
-		DateNaissance time.Time // TODO: Check correct type for time postgres type
+		DateNaissance string // TODO: Check correct type for time postgres type
 		Email         string
 		Num           string
 		INAMIMed      string // CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(n_inami_med)
@@ -31,7 +30,7 @@ func PatientsCreate(c *gin.Context) {
 		patient_data.Nom,
 		patient_data.Prenom,
 		patient_data.Genre,
-		patient_data.DateNaissance.Format(time.RFC3339),
+		patient_data.DateNaissance,
 		patient_data.Email,
 		patient_data.Num,
 		patient_data.INAMIMed,
