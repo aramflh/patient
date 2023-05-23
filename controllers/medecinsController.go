@@ -8,7 +8,7 @@ import (
 )
 
 func MedecinsCreate(c *gin.Context) {
-	// Get data off request
+	// Get data off requests
 	var med_data struct {
 		INAMI      string
 		Nom        string
@@ -22,6 +22,7 @@ func MedecinsCreate(c *gin.Context) {
 	c.Bind(&med_data)
 
 	// Create a pharmacien
+	// TODO: Change the query
 	querry := fmt.Sprintf("INSERT INTO \"Systeme_ana\" (nom_sys_ana, nom_pathologie) VALUES ('%s%s%s', '%s%s%s%s');",
 		med_data.INAMI,
 		med_data.Nom,

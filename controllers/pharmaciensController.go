@@ -8,7 +8,7 @@ import (
 )
 
 func PharmaciensCreate(c *gin.Context) {
-	// Get data off request
+	// Get data off requests
 	var pharma_data struct {
 		INAMI  string
 		Nom    string
@@ -20,7 +20,13 @@ func PharmaciensCreate(c *gin.Context) {
 	c.Bind(&pharma_data)
 
 	// Create a pharmacien
-	querry := fmt.Sprintf("INSERT INTO \"Systeme_ana\" (nom_sys_ana, nom_pathologie) VALUES ('%s%s%s', '%s%s');", pharma_data.INAMI, pharma_data.Nom, pharma_data.Prenom, pharma_data.Email, pharma_data.Num)
+	// TODO: Change the query
+	querry := fmt.Sprintf("INSERT INTO \"Systeme_ana\" (nom_sys_ana, nom_pathologie) VALUES ('%s%s%s', '%s%s');",
+		pharma_data.INAMI,
+		pharma_data.Nom,
+		pharma_data.Prenom,
+		pharma_data.Email,
+		pharma_data.Num)
 	initializers.DB.Exec(querry)
 
 	// Return a patient

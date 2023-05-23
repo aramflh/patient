@@ -20,5 +20,10 @@ func main() {
 	r.POST("/pharmaciens", controllers.PharmaciensCreate)
 	// Create medecin
 	r.POST("/medecins", controllers.MedecinsCreate)
+
+	// Create patient
+	r.POST("/patients", controllers.PatientsCreate)
+
+	// Run the server
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
