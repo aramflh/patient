@@ -35,12 +35,13 @@ CREATE TABLE "Patient" (
                            prenom VARCHAR NOT NULL,
                            genre CHAR (1) NOT NULL,
                            date_naissance DATE,
-                           a_mail VARCHAR,
+                           a_mail VARCHAR UNIQUE ,
+                           pwd VARCHAR,
                            n_telephone VARCHAR,
                            n_inami_med VARCHAR,
                            n_inami_pha VARCHAR,
-                           CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(n_inami_med),
-                           CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(n_inami_pha)
+                           CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(inami),
+                           CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(inami)
 );
 
 CREATE TABLE "Medicament" (
@@ -70,8 +71,8 @@ CREATE TABLE "Prescription"(
                                CONSTRAINT CompKey_date_inamim_med_niss PRIMARY KEY (date_emission,n_niss,nom_medic,n_inami_med),
                                CONSTRAINT fk_n_niss FOREIGN KEY (n_niss) REFERENCES "Patient"(n_niss),
                                CONSTRAINT fk_nom_medic FOREIGN KEY (nom_medic) REFERENCES "Medicament"(nom_medic),
-                               CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(n_inami_med),
-                               CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(n_inami_pha)
+                               CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(inami),
+                               CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(inami)
 );
 
 CREATE TABLE "Traitement"(
@@ -84,6 +85,6 @@ CREATE TABLE "Traitement"(
                              CONSTRAINT CompKey_date_inamip_inamim_med_niss PRIMARY KEY (date_debut,n_niss,nom_medic,n_inami_pha,n_inami_med),
                              CONSTRAINT fk_n_niss FOREIGN KEY (n_niss) REFERENCES "Patient"(n_niss),
                              CONSTRAINT fk_nom_medic FOREIGN KEY (nom_medic) REFERENCES "Medicament"(nom_medic),
-                             CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(n_inami_med),
-                             CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(n_inami_pha)
+                             CONSTRAINT fk_n_inami_med FOREIGN KEY (n_inami_med) REFERENCES "Medecin"(inami),
+                             CONSTRAINT fk_n_inami_pha FOREIGN KEY (n_inami_pha) REFERENCES "Pharmacien"(inami)
 );

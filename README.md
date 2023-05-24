@@ -7,12 +7,12 @@
 - URL: /medecins 
 - Method: POST 
 - Request (JSON):
-  - INAMI
-  - Nom
-  - Prenom
-  - Email
-  - Num
-  - Specialite 
+  - INAMI (string)
+  - Nom (string)
+  - Prenom (string)
+  - Email (string)
+  - Num (string)
+  - Specialite (string)
 - Response 
   - HTTP_201_CREATED 
   - HTTP_400_BAD_REQUEST
@@ -22,11 +22,11 @@
 - URL: /pharmaciens
 - Method: POST
 - Request (JSON):
-    - INAMI
-    - Nom
-    - Prenom
-    - Email
-    - Num
+    - INAMI (string)
+    - Nom (string)
+    - Prenom (string)
+    - Email (string)
+    - Num (string)
 - Response
     - HTTP_201_CREATED
     - HTTP_400_BAD_REQUEST
@@ -34,14 +34,22 @@
     
 ### Créer un compte patient
 
-- URL: 
-- Method:
+- URL: /signup
+- Method: POST
 - Request (JSON):
-    - A
-    - A
+    - INSS (string)
+    - Nom (string)
+    - Prenom (string)
+    - Genre (1 char max)
+    - DateNaissance (string yyyy-mm-dd)
+    - Email (string)
+    - Password (string)
+    - Num (string)
+    - INAMIMed (string)
+    - INAMIPha (string)
 - Response
-    - A
-    - A
+  - HTTP_201_CREATED
+  - HTTP_400_BAD_REQUEST
 
 ### Se connecter en tant que patient
 

@@ -10,7 +10,7 @@ import (
 // MedecinsCreate creates a medecin record on the "Medecin" table of the DB
 func MedecinsCreate(c *gin.Context) {
 	// Get data off requests
-	var med_data struct {
+	var medData struct {
 		INAMI      string
 		Nom        string
 		Prenom     string
@@ -19,16 +19,22 @@ func MedecinsCreate(c *gin.Context) {
 		Specialite string
 	}
 
-	c.Bind(&med_data)
+	if c.Bind(&medData) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read request",
+		})
+		// Stop
+		return
+	}
 
 	// Create a medecin
 	querry := fmt.Sprintf("INSERT INTO \"Medecin\" (inami , nom, prenom, a_mail, n_telephone, specialite) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
-		med_data.INAMI,
-		med_data.Nom,
-		med_data.Prenom,
-		med_data.Email,
-		med_data.Num,
-		med_data.Specialite)
+		medData.INAMI,
+		medData.Nom,
+		medData.Prenom,
+		medData.Email,
+		medData.Num,
+		medData.Specialite)
 
 	// Executes the query and get error if exist
 	err := initializers.DB.Exec(querry).Error

@@ -10,7 +10,7 @@ import (
 // PharmaciensCreate creates a pharmacien record on the "Pharmacien" table of the DB
 func PharmaciensCreate(c *gin.Context) {
 	// Get data off requests
-	var pharma_data struct {
+	var pharmaData struct {
 		INAMI  string
 		Nom    string
 		Prenom string
@@ -18,15 +18,21 @@ func PharmaciensCreate(c *gin.Context) {
 		Num    string
 	}
 
-	c.Bind(&pharma_data)
+	if c.Bind(&pharmaData) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read request",
+		})
+		// Stop
+		return
+	}
 
 	// Create a pharmacien
 	querry := fmt.Sprintf("INSERT INTO \"Pharmacien\" (inami, nom, prenom, a_mail, n_telephone) VALUES ('%s', '%s', '%s', '%s', '%s');",
-		pharma_data.INAMI,
-		pharma_data.Nom,
-		pharma_data.Prenom,
-		pharma_data.Email,
-		pharma_data.Num)
+		pharmaData.INAMI,
+		pharmaData.Nom,
+		pharmaData.Prenom,
+		pharmaData.Email,
+		pharmaData.Num)
 
 	// Executes the query and get error if exist
 	err := initializers.DB.Exec(querry).Error

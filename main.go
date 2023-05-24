@@ -2,9 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin" // Go web frameworks
-	"patient/controllers"      // This package contains functions managing patient account, medecin and pharamacien
-	"patient/initializers"     // This package contains functions enabling the initialization of the DB and the env var
-	"patient/requests"         // This package contains the SQL requests to be executed
+	"log"
+	"patient/controllers"  // This package contains functions managing patient account, medecin and pharamacien
+	"patient/initializers" // This package contains functions enabling the initialization of the DB and the env var
+	"patient/requests"     // This package contains the SQL requests to be executed
 )
 
 // init loads before the main function
@@ -17,8 +18,12 @@ func init() {
 func main() {
 	r := gin.Default()
 
+	/**********************
+	 *   ROUTES
+	 *********************/
+
 	/*
-	 * GET requests
+	 * SQL requests
 	 */
 	r.GET("/requests/1", requests.DoRequest1)
 	r.GET("/requests/2", requests.DoRequest2)
@@ -32,16 +37,20 @@ func main() {
 	r.GET("/requests/10", requests.DoRequest10)
 
 	/*
-	 * POST Requests
+	 * SIGN UP
 	 */
+
+	r.POST("/signup", controllers.SignUp)
 
 	// Create a pharmacien
 	r.POST("/pharmaciens", controllers.PharmaciensCreate)
 	// Create a medecin
 	r.POST("/medecins", controllers.MedecinsCreate)
-	// Create a patient
-	r.POST("/patients", controllers.PatientsCreate)
 
 	// Run the server
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
+	if r.Run() != nil {
+		log.Fatal("Unable to run the server")
+		return
+	}
 }
