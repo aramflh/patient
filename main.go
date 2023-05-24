@@ -27,14 +27,15 @@ func main() {
 	 *   ROUTES
 	 *********************/
 
+	/* HOME */
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"message": "",
 		})
 	})
 
-	requestRoutes := r.Group("/requests")
 	/* SQL requests */
+	requestRoutes := r.Group("/requests")
 	requestRoutes.GET("/1", requests.DoRequest1)
 	requestRoutes.GET("/2", requests.DoRequest2)
 	requestRoutes.GET("/3", requests.DoRequest3)
@@ -49,18 +50,17 @@ func main() {
 	/* Add 'pharamcien' */
 	r.GET("/pharmaciens", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "addPharma.html", gin.H{})
-		//c.Redirect(http.StatusMovedPermanently, "/medecins")
 	})
 	r.POST("/pharmaciens", controllers.PharmaciensCreate)
 
 	/* Add 'medecin' */
 	r.GET("/medecins", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "addDoctor.html", gin.H{})
-		//c.Redirect(http.StatusMovedPermanently, "/medecins")
 	})
 	r.POST("/medecins", controllers.MedecinsCreate)
 
 	/* SIGN UP */
+	r.GET("/signup", controllers.SignUpViewer)
 	r.POST("/signup", controllers.SignUp)
 
 	/* LOGIN */

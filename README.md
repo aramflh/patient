@@ -45,7 +45,7 @@ go mod tidy
 go run <file.go>
 ```
 
-6. Connect to the server:
+6. Connect to the server (see port in [.env](.env):
    http://localhost:3000/
 
 

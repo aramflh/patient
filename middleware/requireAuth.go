@@ -13,7 +13,7 @@ import (
 // RequireAuth checks if the user is authenticated
 func RequireAuth(c *gin.Context) {
 	// Get the cookie off the request
-	tokenString, cookieErr := c.Cookie("Authorization")
+	tokenString, cookieErr := c.Cookie("PatientAuthorization")
 
 	if cookieErr != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)

@@ -14,6 +14,22 @@ import (
 const COOKIE_AGE int = 3600 * 24 * 30 // Cookie expire after 1 month
 const JWT_AGE = time.Hour * 24 * 30   // JWT token expire after 1 month
 
+// SignUpViewer offers a html views for signing up
+func SignUpViewer(c *gin.Context) {
+	type Result []string
+	var INAMIMedList Result
+	var INAMIPhaList Result
+
+	initializers.DB.Raw("SELECT inami FROM \"Medecin\" ;").Scan(&INAMIMedList)
+	initializers.DB.Raw("SELECT inami FROM \"Pharmacien\" ;").Scan(&INAMIPhaList)
+
+	data := gin.H{
+		"INAMIMedList": INAMIMedList,
+		"INAMIPhaList": INAMIPhaList,
+	}
+	c.HTML(http.StatusOK, "signUp.html", data)
+}
+
 // SignUp enables the user to create a patient account
 func SignUp(c *gin.Context) {
 	// Get patient data request body
@@ -31,8 +47,8 @@ func SignUp(c *gin.Context) {
 	}
 
 	if c.Bind(&requestData) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read request",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Failed to read request",
 		})
 		// Stop
 		return
@@ -42,8 +58,8 @@ func SignUp(c *gin.Context) {
 
 	// Check for an error
 	if hashErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to hash password",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Failed to hash password",
 		})
 		// Stop
 		return
@@ -67,12 +83,12 @@ func SignUp(c *gin.Context) {
 
 	// Check if an error occurred
 	if queryErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": fmt.Sprintf("An error occured: %s", queryErr),
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": queryErr,
 		})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "OK",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Compte crée avec succès !",
 		})
 	}
 }
@@ -139,20 +155,20 @@ func Login(c *gin.Context) {
 
 	// Set the cookie
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, COOKIE_AGE, "", "", false, true)
+	c.SetCookie("PatientAuthorization", tokenString, COOKIE_AGE, "", "", false, true)
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // Logout deletes the cookies and logouts the patient
 func Logout(c *gin.Context) {
-	cookie, err := c.Cookie("Authorization")
+	cookie, err := c.Cookie("PatientAuthorization")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to disable cookie",
+			"error": "Failed to fetch cookie",
 		})
 		return
 	}
-	c.SetCookie("Authorization", cookie, -1, "", "", false, true)
+	c.SetCookie("PatientAuthorization", cookie, -1, "", "", false, true)
 }
 
 func Validate(c *gin.Context) {
