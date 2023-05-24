@@ -24,7 +24,7 @@ func DoRequest6(c *gin.Context) {
 		"FROM \"Medecin\" m " +
 		"INNER JOIN \"Prescription\" p ON m.n_inami_med = p.n_inami_med " +
 		"INNER JOIN \"Medicament\" med ON p.nom_medic = med.nom_medic " +
-		"WHERE med.nom_pathologie NOT IN (" +
+		"WHERE med.nom_pathologie NOT IN (SELECT nom_pathologie " +
 		"FROM \"Pathologie\" " +
 		"WHERE nom_sys_ana = m.nom_sys_ana);"
 
