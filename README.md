@@ -93,14 +93,18 @@ go mod init <module_path>
 ```
 - Install dependacy
 ```Shell
-# ORM
+# ORM - Database management
 go get -u gorm.io/gorm
 go get -u gorm.io/driver/postgres
-# Web framework
+# Web framework 
 go get -u github.com/gin-gonic/gin
+# Crypto functions
+go get -u golang.org/x/crypto/bcrypt
+# JWT package
+go get -u github.com/golang-jwt/jwt/v5
 # .env management
 go get github.com/joho/godotenv
-# auto compile go project
+# auto compile go project - Not mandatory
 go get github.com/githubnemo/CompileDaemon 
 go install github.com/githubnemo/CompileDaemon   # Use in CLI
 ```

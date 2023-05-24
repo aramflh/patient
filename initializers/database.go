@@ -4,7 +4,7 @@ package initializers
 import (
 	"fmt"
 	"gorm.io/driver/postgres"
-	"gorm.io/gen"
+	//"gorm.io/gen"
 	"gorm.io/gorm"
 	"log"
 	"os"
@@ -41,6 +41,7 @@ func ConnectToDB() {
 	}
 }
 
+/*
 // GenStructFromDB Generates all the models from the DB tables
 // See more: https://gorm.io/gen/database_to_structs.html & https://github.com/go-gorm/gen/tree/master/examples
 func GenStructFromDB() {
@@ -78,3 +79,5 @@ func GenStructFromDB() {
 	// Execute the generator
 	g.Execute()
 }
+
+*/
