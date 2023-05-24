@@ -64,13 +64,15 @@ func main() {
 	r.POST("/signup", controllers.SignUp)
 
 	/* LOGIN */
+	r.GET("/login", controllers.LoginViewer)
 	r.POST("/login", controllers.Login)
 
-	/* LOGIN */
+	/* LOGOUT */
 	r.GET("/logout", controllers.Logout)
 
-	/* VALIDATE */
-	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
+	/* MY ACCOUNT */
+	r.GET("/account", middleware.RequireAuth, controllers.ManageAccountViewer)
+	r.POST("/account", middleware.RequireAuth, controllers.ManageAccount)
 
 	// Run the server
 	if r.Run() != nil {

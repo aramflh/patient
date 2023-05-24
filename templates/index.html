@@ -8,10 +8,17 @@
 
 <p>{{ .message }}</p>
 
+<div  style="display:flex;justify-content: space-between";>
+    <div>
+        <a href="/login">Login</a>
 
-<a href="/login">Login</a>
+        <a href="/signup">Register</a>
+    </div>
+    <div>
+        <a href="/account">Mon compte</a>
+    </div>
+</div>
 
-<a href="/signup">Register</a>
 
 <br><br>
 
@@ -54,6 +61,10 @@
         <a href="/requests/10">Request 10</a>
     </li>
 </ul>
+
+<div  style="display:flex;justify-content: end";>
+        <a href="/logout">Se déconnecter</a>
+</div>
 
 </body>
 </html>

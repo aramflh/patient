@@ -4,11 +4,11 @@
 
 - [x] Ajouter un médecin
 - [x] Ajouter un pharmacien
-- [ ] Créer un compte patient
-- [ ] Se connecter en tant que patient
-- [ ] Modifier son pharmacien ou médecin de référence (Connecté)
-- [ ] Consulter SES informations médicales (Connectés)
-- [ ] Consulter SES traitements (Connecté)
+- [X] Créer un compte patient
+- [X] Se connecter en tant que patient
+- [X] Modifier son pharmacien ou médecin de référence (Connecté)
+- [ ] Consulter ses informations médicales (Connectés)
+- [ ] Consulter ses traitements (Connecté)
 
 
 ## Initialization

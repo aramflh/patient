@@ -47,7 +47,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	if c.Bind(&requestData) != nil {
-		c.HTML(http.StatusOK, "index.html", gin.H{
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"message": "Failed to read request",
 		})
 		// Stop
@@ -58,7 +58,7 @@ func SignUp(c *gin.Context) {
 
 	// Check for an error
 	if hashErr != nil {
-		c.HTML(http.StatusOK, "index.html", gin.H{
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"message": "Failed to hash password",
 		})
 		// Stop
@@ -83,7 +83,7 @@ func SignUp(c *gin.Context) {
 
 	// Check if an error occurred
 	if queryErr != nil {
-		c.HTML(http.StatusOK, "index.html", gin.H{
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"message": queryErr,
 		})
 	} else {
@@ -91,6 +91,12 @@ func SignUp(c *gin.Context) {
 			"message": "Compte crée avec succès !",
 		})
 	}
+}
+
+// LoginViewer offers a html views for logging in
+func LoginViewer(c *gin.Context) {
+	data := gin.H{}
+	c.HTML(http.StatusOK, "login.html", data)
 }
 
 // Login enables the user to connect to its patient account
@@ -102,8 +108,8 @@ func Login(c *gin.Context) {
 	}
 
 	if c.Bind(&requestData) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read request",
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": "Failed to read request",
 		})
 		// Stop
 		return
@@ -116,8 +122,8 @@ func Login(c *gin.Context) {
 	initializers.DB.Raw("SELECT n_niss FROM \"Patient\" WHERE  a_mail = $1;", requestData.Email).Scan(&currentNISS)
 
 	if currentNISS == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or passsword",
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": "Invalid email or passsword",
 		})
 		return
 	}
@@ -130,8 +136,8 @@ func Login(c *gin.Context) {
 	hashErr := bcrypt.CompareHashAndPassword([]byte(hashedPwd), []byte(requestData.Password))
 
 	if hashErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or passsword",
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": "Invalid email or passsword",
 		})
 		return
 	}
@@ -147,8 +153,8 @@ func Login(c *gin.Context) {
 	tokenString, tokenErr := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
 	if tokenErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to create token",
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": "Failed to create token !",
 		})
 		return
 	}
@@ -156,24 +162,83 @@ func Login(c *gin.Context) {
 	// Set the cookie
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("PatientAuthorization", tokenString, COOKIE_AGE, "", "", false, true)
-	c.JSON(http.StatusOK, gin.H{})
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"message": "Connecté !",
+	})
 }
 
 // Logout deletes the cookies and logouts the patient
 func Logout(c *gin.Context) {
 	cookie, err := c.Cookie("PatientAuthorization")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to fetch cookie",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "",
 		})
 		return
 	}
 	c.SetCookie("PatientAuthorization", cookie, -1, "", "", false, true)
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"message": "Déconnecté !",
+	})
 }
 
-func Validate(c *gin.Context) {
-	patient, _ := c.Get("activePatientNiss")
-	c.JSON(http.StatusOK, gin.H{
-		"message": patient,
-	})
+// ManageAccount enables the patient to modify medecin and/or pharmacien, and view its treatment and medical information
+func ManageAccount(c *gin.Context) {
+	// Get the active patient
+	activeNiss, _ := c.Get("activePatientNiss")
+	// Get patient data request body
+	var requestData struct {
+		INAMIMed string
+		INAMIPha string
+	}
+
+	if c.Bind(&requestData) != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": "Failed to read request",
+		})
+		// Stop
+		return
+	}
+	// Update the user
+	querry := fmt.Sprintf("UPDATE \"Patient\" SET n_inami_med = '%s', n_inami_pha = '%s' WHERE n_niss = '%s';",
+		requestData.INAMIMed,
+		requestData.INAMIPha,
+		activeNiss)
+
+	// Executes the query and get error if exist
+	queryErr := initializers.DB.Exec(querry).Error
+
+	// Check if an error occurred
+	if queryErr != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message": queryErr,
+		})
+	} else {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Compte modifié avec succès !",
+		})
+	}
+}
+
+// ManageAccountViewer  offers a html views for the page account
+func ManageAccountViewer(c *gin.Context) {
+
+	type Result []string
+	var INAMIMedList Result
+	var INAMIPhaList Result
+	var traitements Result
+	var infoMed Result
+
+	initializers.DB.Raw("SELECT inami FROM \"Medecin\" ;").Scan(&INAMIMedList)
+	initializers.DB.Raw("SELECT inami FROM \"Pharmacien\" ;").Scan(&INAMIPhaList)
+
+	//TODO: Créer les requetes traitements et informations médicales
+
+	data := gin.H{
+		"INAMIMedList": INAMIMedList,
+		"INAMIPhaList": INAMIPhaList,
+		"traitements":  traitements,
+		"infoMed":      infoMed,
+	}
+	c.HTML(http.StatusOK, "myAccount.html", data)
 }

@@ -16,6 +16,9 @@ func RequireAuth(c *gin.Context) {
 	tokenString, cookieErr := c.Cookie("PatientAuthorization")
 
 	if cookieErr != nil {
+		c.HTML(http.StatusUnauthorized, "index.html", gin.H{
+			"message": "Connectez-vous pour continuer",
+		})
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 	// Decode/Validate the cookie
@@ -37,6 +40,9 @@ func RequireAuth(c *gin.Context) {
 
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			fmt.Println("Token expired")
+			c.HTML(http.StatusUnauthorized, "index.html", gin.H{
+				"message": "Session expiré veuillez-vous reconnecter",
+			})
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -59,6 +65,9 @@ func RequireAuth(c *gin.Context) {
 		// User is authenticated continue to next function
 		c.Next()
 	} else {
+		c.HTML(http.StatusUnauthorized, "index.html", gin.H{
+			"message": "Connectez-vous pour continuer",
+		})
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 

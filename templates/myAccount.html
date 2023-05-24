@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mon compte</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Mon compte</h1>
+
+
+<h3>Modifier compte</h3>
+<form action="/account" method="POST">
+  <div>
+    <label for="INAMIMed">Changer l'INAMI du médecin</label>
+    <select name="INAMIMed" id="INAMIMed">
+      {{ range .INAMIMedList }}
+      <option value={{ . }}>{{ . }}</option>
+      {{end}}
+    </select>
+  </div>
+  <div>
+    <label for="INAMIPha">Changer l'INAMI du pharmacien</label>
+    <select name="INAMIPha" id="INAMIPha">
+      {{ range .INAMIPhaList }}
+      <option value={{ . }}>{{ . }}</option>
+      {{end}}
+    </select>
+  </div>
+  <button type="submit">Save</button>
+</form>
+
+<h3>Mes traitements</h3>
+{{ range .traitements }}
+<p>{{ . }}</p>
+{{end}}
+<h3>Mes informations médicales</h3>
+{{ range .infoMed }}
+<p>{{ . }}</p>
+{{end}}
+
+</body>
+</html>
