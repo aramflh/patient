@@ -19,8 +19,8 @@ func PharmaciensCreate(c *gin.Context) {
 	}
 
 	if c.Bind(&pharmaData) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read request",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Failed to read request",
 		})
 		// Stop
 		return
@@ -39,12 +39,12 @@ func PharmaciensCreate(c *gin.Context) {
 
 	// Check if an error occurred
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": fmt.Sprintf("An error occured: %s", err),
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": err,
 		})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "OK",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Pharmacien ajouté avec succès !",
 		})
 	}
 }

@@ -21,6 +21,7 @@ func DoRequest2(c *gin.Context) {
 		"number":  "2",
 		"subject": "La liste des pathologies qui peuvent être prise en charge par un seul type de spécialistes.\n",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

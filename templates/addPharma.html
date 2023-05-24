@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un pharmacien</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Ajouter un pharmacien</h1>
+
+<form action="/pharmaciens" method="POST">
+  <div>
+    <label for="INAMI">Numéro INAMI</label>
+    <input type="text" name="INAMI" id="INAMI">
+  </div>
+  <div>
+    <label for="Nom">Nom</label>
+    <input type="text" name="Nom" id="Nom">
+  </div>
+  <div>
+    <label for="Prenom">Prenom</label>
+    <input type="text" name="Prenom" id="Prenom">
+  </div>
+  <div>
+    <label for="Email">Email</label>
+    <input type="text" name="Email" id="Email">
+  </div>
+  <div>
+    <label for="Num">Numéro de téléphone</label>
+    <input type="text" name="Num" id="Num">
+  </div>
+  <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

@@ -6,6 +6,9 @@
 </head>
 <body>
     <h1>{{ .subject }}</h1>
+    <h2>Commande utilisé</h2>
+    <p>{{ .command }}</p>
+    <h2>Résultat</h2>
     {{ range .result }}
     <p>{{ . }}</p>
     {{end}}

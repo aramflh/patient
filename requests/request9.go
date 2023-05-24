@@ -21,6 +21,7 @@ func DoRequest9(c *gin.Context) {
 		"number":  "9",
 		"subject": "Pour chaque patient, le nombre de médecin lui ayant prescrit un médicament.\n",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

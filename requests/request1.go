@@ -25,6 +25,7 @@ func DoRequest1(c *gin.Context) {
 		"number":  "1",
 		"subject": "La liste des noms commerciaux de médicaments correspondant à un nom en DCI, classés par ordre alphabétique et taille de conditionnement.\n",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

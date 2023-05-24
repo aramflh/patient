@@ -20,6 +20,7 @@ func DoRequest10(c *gin.Context) {
 		"number":  "10",
 		"subject": "La liste de médicament n’étant plus prescrit depuis une date spécifique.\n",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

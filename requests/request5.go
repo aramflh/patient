@@ -21,6 +21,7 @@ func DoRequest5(c *gin.Context) {
 		"number":  "5",
 		"subject": "Tous les patients ayant  été traités par un médicament (sous sa DCI) à une date antérieure mais qui ne le sont plus, pour vérifier qu’un patients suive bien un traitement chronique.",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

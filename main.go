@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin" // Go web frameworks
 	"log"
+	"net/http"
 	"patient/controllers"  // This package contains functions managing patient account, medecin and pharamacien
 	"patient/initializers" // This package contains functions enabling the initialization of the DB and the env var
 	"patient/middleware"   // This package contains the function verifying the log status
@@ -26,6 +27,12 @@ func main() {
 	 *   ROUTES
 	 *********************/
 
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "",
+		})
+	})
+
 	requestRoutes := r.Group("/requests")
 	/* SQL requests */
 	requestRoutes.GET("/1", requests.DoRequest1)
@@ -40,9 +47,17 @@ func main() {
 	requestRoutes.GET("/10", requests.DoRequest10)
 
 	/* Add 'pharamcien' */
+	r.GET("/pharmaciens", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "addPharma.html", gin.H{})
+		//c.Redirect(http.StatusMovedPermanently, "/medecins")
+	})
 	r.POST("/pharmaciens", controllers.PharmaciensCreate)
 
 	/* Add 'medecin' */
+	r.GET("/medecins", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "addDoctor.html", gin.H{})
+		//c.Redirect(http.StatusMovedPermanently, "/medecins")
+	})
 	r.POST("/medecins", controllers.MedecinsCreate)
 
 	/* SIGN UP */

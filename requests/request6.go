@@ -21,6 +21,7 @@ func DoRequest6(c *gin.Context) {
 		"number":  "6",
 		"subject": "La liste des médecins ayant prescrit des médicaments ne relevant pas de leur spécialité.",
 		"result":  result,
+		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
 	}
 
 	c.HTML(http.StatusOK, "request.html", data)

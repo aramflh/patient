@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un médecin</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Ajouter un médecin</h1>
+
+<form action="/medecins" method="POST">
+    <div>
+        <label for="INAMI">Numéro INAMI</label>
+        <input type="text" name="INAMI" id="INAMI">
+    </div>
+    <div>
+        <label for="Nom">Nom</label>
+        <input type="text" name="Nom" id="Nom">
+    </div>
+    <div>
+        <label for="Prenom">Prenom</label>
+        <input type="text" name="Prenom" id="Prenom">
+    </div>
+    <div>
+        <label for="Email">Email</label>
+        <input type="text" name="Email" id="Email">
+    </div>
+    <div>
+        <label for="Num">Numéro de téléphone</label>
+        <input type="text" name="Num" id="Num">
+    </div>
+    <div>
+        <label for="Specialite">Specialite</label>
+        <input type="text" name="Specialite" id="Specialite">
+    </div>
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>
