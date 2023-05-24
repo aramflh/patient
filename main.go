@@ -13,27 +13,31 @@ import (
 func init() {
 	initializers.LoadEnvVariables()
 	initializers.ConnectToDB()
-	//initializers.GenStructFromDB()
 }
 
 func main() {
+	// Creates a gin instance
 	r := gin.Default()
+
+	// Loads HTML files
+	r.LoadHTMLGlob("templates/*.html")
 
 	/**********************
 	 *   ROUTES
 	 *********************/
 
+	requestRoutes := r.Group("/requests")
 	/* SQL requests */
-	r.GET("/requests/1", requests.DoRequest1)
-	r.GET("/requests/2", requests.DoRequest2)
-	r.GET("/requests/3", requests.DoRequest3)
-	r.GET("/requests/4", requests.DoRequest4)
-	r.GET("/requests/5", requests.DoRequest5)
-	r.GET("/requests/6", requests.DoRequest6)
-	r.GET("/requests/7", requests.DoRequest7)
-	r.GET("/requests/8", requests.DoRequest8)
-	r.GET("/requests/9", requests.DoRequest9)
-	r.GET("/requests/10", requests.DoRequest10)
+	requestRoutes.GET("/1", requests.DoRequest1)
+	requestRoutes.GET("/2", requests.DoRequest2)
+	requestRoutes.GET("/3", requests.DoRequest3)
+	requestRoutes.GET("/4", requests.DoRequest4)
+	requestRoutes.GET("/5", requests.DoRequest5)
+	requestRoutes.GET("/6", requests.DoRequest6)
+	requestRoutes.GET("/7", requests.DoRequest7)
+	requestRoutes.GET("/8", requests.DoRequest8)
+	requestRoutes.GET("/9", requests.DoRequest9)
+	requestRoutes.GET("/10", requests.DoRequest10)
 
 	/* Add 'pharamcien' */
 	r.POST("/pharmaciens", controllers.PharmaciensCreate)

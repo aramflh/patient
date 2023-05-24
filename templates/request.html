@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request n° {{ .number  }}</title>
+</head>
+<body>
+    <h1>{{ .subject }}</h1>
+    {{ range .result }}
+    <p>{{ . }}</p>
+    {{end}}
+</body>
+</html>
