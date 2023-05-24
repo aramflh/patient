@@ -17,21 +17,18 @@ func MedecinsCreate(c *gin.Context) {
 		Email      string
 		Num        string
 		Specialite string
-		SystemAna  string
 	}
 
 	c.Bind(&med_data)
 
 	// Create a medecin
-	// TODO: Change the query
-	querry := fmt.Sprintf("INSERT INTO \"Systeme_ana\" (nom_sys_ana, nom_pathologie) VALUES ('%s%s%s', '%s%s%s%s');",
+	querry := fmt.Sprintf("INSERT INTO \"Medecin\" (inami , nom, prenom, a_mail, n_telephone, specialite) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
 		med_data.INAMI,
 		med_data.Nom,
 		med_data.Prenom,
 		med_data.Email,
 		med_data.Num,
-		med_data.Specialite,
-		med_data.SystemAna)
+		med_data.Specialite)
 
 	// Executes the query and get error if exist
 	err := initializers.DB.Exec(querry).Error
@@ -43,7 +40,7 @@ func MedecinsCreate(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"message": "Medecins created !",
+			"message": "OK",
 		})
 	}
 

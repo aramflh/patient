@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"patient/controllers"  // This package contains functions managing patient account, medecin and pharamacien
-	"patient/initializers" // This package contains functions enabling the initialization of the DB and the env var
-	"patient/requests"     // This package contains the SQL requests to be executed
+	"github.com/gin-gonic/gin" // Go web frameworks
+	"patient/controllers"      // This package contains functions managing patient account, medecin and pharamacien
+	"patient/initializers"     // This package contains functions enabling the initialization of the DB and the env var
+	"patient/requests"         // This package contains the SQL requests to be executed
 )
 
 // init loads before the main function

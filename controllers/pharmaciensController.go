@@ -21,8 +21,7 @@ func PharmaciensCreate(c *gin.Context) {
 	c.Bind(&pharma_data)
 
 	// Create a pharmacien
-	// TODO: Change the query
-	querry := fmt.Sprintf("INSERT INTO \"Systeme_ana\" (nom_sys_ana, nom_pathologie) VALUES ('%s%s%s', '%s%s');",
+	querry := fmt.Sprintf("INSERT INTO \"Pharmacien\" (inami, nom, prenom, a_mail, n_telephone) VALUES ('%s', '%s', '%s', '%s', '%s');",
 		pharma_data.INAMI,
 		pharma_data.Nom,
 		pharma_data.Prenom,
@@ -39,7 +38,7 @@ func PharmaciensCreate(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"message": "Pharmaciens created !",
+			"message": "OK",
 		})
 	}
 }

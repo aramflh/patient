@@ -2,8 +2,89 @@
 
 ## API Documentation
 
-TODO
+### Ajouter un médecin
 
+- URL: /medecins 
+- Method: POST 
+- Request (JSON):
+  - INAMI
+  - Nom
+  - Prenom
+  - Email
+  - Num
+  - Specialite 
+- Response 
+  - HTTP_201_CREATED 
+  - HTTP_400_BAD_REQUEST
+
+### Ajouter un pharmacien
+
+- URL: /pharmaciens
+- Method: POST
+- Request (JSON):
+    - INAMI
+    - Nom
+    - Prenom
+    - Email
+    - Num
+- Response
+    - HTTP_201_CREATED
+    - HTTP_400_BAD_REQUEST
+
+    
+### Créer un compte patient
+
+- URL: 
+- Method:
+- Request (JSON):
+    - A
+    - A
+- Response
+    - A
+    - A
+
+### Se connecter en tant que patient
+
+- URL:
+- Method:
+- Request (JSON):
+    - A
+    - A
+- Response
+    - A
+    - A
+  
+### Modifier son pharmacien ou médecin de référence (Connecté)
+- URL:
+- Method:
+- Request (JSON):
+    - A
+    - A
+- Response
+    - A
+    - A
+  
+### Consulter SES informations médicales (Connectés)
+- URL:
+- Method:
+- Request (JSON):
+    - A
+    - A
+- Response
+    - A
+    - A
+  
+### Consulter SES traitements (Connecté)
+- URL:
+- Method:
+- Request (JSON):
+    - A
+    - A
+- Response
+    - A
+    - A
+  
+    
 ## Initialization
 
 - Creates a new module
@@ -48,12 +129,12 @@ TODO
 
 ## Request
 
-- La liste des noms commerciaux de ḿedicaments correspondant à un nom en DCI, class ́es par ordre alphab ́etique et taille de conditionnement.
+- [X] La liste des noms commerciaux de médicaments correspondant à un nom en DCI, classées par ordre alphabétique et taille de conditionnement.
 
 ```SQL
 SELECT nom_medic FROM "Medicament" ORDER BY  conditionnement, nom_medic;
 ```
 
-- La liste des pathologies qui peuvent ˆetre prise en charge par un seul type de sp ́ecialistes.
+- [ ] La liste des pathologies qui peuvent être prise en charge par un seul type de spécialistes.
 
 
