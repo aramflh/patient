@@ -104,7 +104,7 @@ go mod init <module_path>
 # ORM - Database management
 go get -u gorm.io/gorm
 go get -u gorm.io/driver/postgres
-# Web framework 
+# Web framework API
 go get -u github.com/gin-gonic/gin
 # Crypto functions
 go get -u golang.org/x/crypto/bcrypt
