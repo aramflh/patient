@@ -11,18 +11,31 @@ La liste de m ́edicament n’ ́etant plus prescrit depuis une date sp ́ecifiq
 */
 
 func DoRequest10(c *gin.Context) {
-	type Result []string
-	var result Result
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	// Get the result of the query
+	type querryResult []struct {
+		NomMedic string
+	}
+	var result querryResult
+	var query string
+
+	query = "SELECT DISTINCT nom_medic " +
+		"FROM \"Medicament\" " +
+		"WHERE nom_medic NOT IN ( " +
+		"SELECT DISTINCT nom_medic " +
+		"FROM \"Prescription\" " +
+		"WHERE date_emission > 'Date_specifique' );"
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "10",
 		"subject": "La liste de médicament n’étant plus prescrit depuis une date spécifique.\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request10.html", data)
 
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request n° {{ .number  }}</title>
+</head>
+<body>
+<a href="/">Home</a>
+<p>{{ .message }}</p>
+<h1>{{ .subject }}</h1>
+<form action="/requests/1" method="POST">
+    <div>
+        <label for="DCI">Nom DCI</label>
+        <select name="DCI" id="DCI">
+            {{ range .AllDCIname }}
+            <option value={{ . }}>{{ . }}</option>
+            {{end}}
+        </select>
+    </div>
+    <button type="submit">Save</button>
+</form>
+<p>Nom DCI choisi: {{ .currentDCI }}</p>
+{{ range .result }}
+<ul>
+    <li>Nom: {{ .Nom }}</li>
+</ul>
+{{end}}
+</body>
+</html>

@@ -12,18 +12,31 @@ Pour chaque patient, le nombre de m ́edecin lui ayant prescrit un m ́edicament
 
 func DoRequest9(c *gin.Context) {
 
-	type Result []string
-	var result Result
+	// Get the result of the query
+	type querryResult []struct {
+		NISS   string
+		Nom    string
+		Prenom string
+		NbrMed int // ??
+	}
+	var result querryResult
+	var query string
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	query = "SELECT p.n_niss, p.nom, p.prenom, COUNT(DISTINCT pr.n_inami_med) AS nombre_medecins " +
+		"FROM \"Patient\" p " +
+		"INNER JOIN \"Prescription\" pr ON p.n_niss = pr.n_niss " +
+		"GROUP BY p.n_niss, p.nom, p.prenom; "
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "9",
 		"subject": "Pour chaque patient, le nombre de médecin lui ayant prescrit un médicament.\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request9.html", data)
 
 }

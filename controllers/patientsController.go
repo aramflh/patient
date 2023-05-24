@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-const COOKIE_AGE int = 3600 * 24 * 30 // Cookie expire after 1 month
-const JWT_AGE = time.Hour * 24 * 30   // JWT token expire after 1 month
+const COOKIE_AGE int = 3600 // Cookie expire after 1 hour
+const JWT_AGE = time.Hour   // JWT token expire after 1 hour
 
 // IndexViewer offers a html views for the home page
 func IndexViewer(c *gin.Context) {
@@ -309,22 +309,73 @@ func ManageAccount(c *gin.Context) {
 // ManageAccountViewer  offers a html views for the page account
 func ManageAccountViewer(c *gin.Context) {
 
-	type Result []string
-	var INAMIMedList Result
-	var INAMIPhaList Result
-	var traitements Result
-	var infoMed Result
+	type listString []string
+	var INAMIMedList listString
+	var INAMIPhaList listString
 
 	initializers.DB.Raw("SELECT inami FROM \"Medecin\" ;").Scan(&INAMIMedList)
 	initializers.DB.Raw("SELECT inami FROM \"Pharmacien\" ;").Scan(&INAMIPhaList)
 
-	//TODO: Créer les requetes traitements et informations médicales
-
 	data := gin.H{
 		"INAMIMedList": INAMIMedList,
 		"INAMIPhaList": INAMIPhaList,
-		"traitements":  traitements,
-		"infoMed":      infoMed,
 	}
 	c.HTML(http.StatusOK, "myAccount.html", data)
 }
+
+func TraitementViewer(c *gin.Context) {
+	activeNiss, _ := c.Get("activePatientNiss")
+
+	// Get the result of the query
+	type querryResult []struct {
+		DateDebut string
+		Duree     string
+		NomMedic  string
+	}
+	var traitements querryResult
+	var query string
+
+	query = fmt.Sprintf("SELECT date_debut, duree_traitement, nom_medic "+
+		"FROM \"Traitement\" "+
+		"WHERE n_niss = '%s';",
+		activeNiss)
+
+	initializers.DB.Raw(query).Scan(&traitements)
+
+	data := gin.H{
+		"message": "",
+		"result":  traitements,
+	}
+
+	c.HTML(http.StatusOK, "traitements.html", data)
+}
+
+/*
+func InfoMedViewer(c *gin.Context) {
+	activeNiss, _ := c.Get("activePatientNiss")
+
+	// Get the result of the query
+	type querryResult []struct {
+		DateDebut string
+		Duree     string
+		NomMedic  string
+	}
+	var info querryResult
+	var query string
+
+	query = fmt.Sprintf("SELECT date_debut, duree_traitement, nom_medic "+
+		"FROM \"Traitement\" "+
+		"WHERE n_niss = '%s';",
+		activeNiss)
+
+	initializers.DB.Raw(query).Scan(&info)
+
+	data := gin.H{
+		"message": "",
+		"result":  info,
+	}
+
+	c.HTML(http.StatusOK, "infoMedicale.html", data)
+}
+
+*/

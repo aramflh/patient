@@ -7,22 +7,35 @@ import (
 )
 
 /*
-Tous les patients ayant  ́et ́e trait ́es par un m ́edicament (sous sa DCI) `a une date ant ́erieure mais qui ne le sont plus,
-pour v ́erifier qu’un patients suive bien un traitement chronique.*/
+Tous les patients ayant été traités par un médicament (sous sa DCI) à une date antérieure mais qui ne le sont plus, pour vérifier qu’un patients suive bien un traitement chronique.*/
 
 func DoRequest5(c *gin.Context) {
 
-	type Result []string
-	var result Result
+	// Get the result of the query
+	type querryResult []struct {
+		Nom    string
+		Prenom string
+	}
+	var result querryResult
+	var query string
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	query = "SELECT DISTINCT p.nom, p.prenom " +
+		"FROM \"Patient\" p " +
+		"INNER JOIN \"Traitement\" t ON p.n_niss = t.n_niss " +
+		"INNER JOIN \"Medicament\" m ON t.nom_medic = m.nom_medic " +
+		"WHERE m.dci = 'Nom_en_DCI' " +
+		"AND t.date_debut < CURDATE() " +
+		"AND t.date_fin IS NOT NULL;"
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "5",
-		"subject": "Tous les patients ayant  été traités par un médicament (sous sa DCI) à une date antérieure mais qui ne le sont plus, pour vérifier qu’un patients suive bien un traitement chronique.",
+		"subject": "Tous les patients ayant été traités par un médicament (sous sa DCI) à une date antérieure mais qui ne le sont plus, pour vérifier qu’un patients suive bien un traitement chronique.\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request5.html", data)
 }

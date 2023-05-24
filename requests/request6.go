@@ -7,22 +7,36 @@ import (
 )
 
 /*
-La liste des m ́edecins ayant prescrit des m ́edicaments ne relevant pas de leur sp ́ecialit ́e.
+La liste des médecins ayant prescrit des médicaments ne relevant pas de leur spécialité.
 */
 
 func DoRequest6(c *gin.Context) {
 
-	type Result []string
-	var result Result
+	// Get the result of the query
+	type querryResult []struct {
+		INAMI      string
+		Specialite string
+	}
+	var result querryResult
+	var query string
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	query = "SELECT DISTINCT m.n_inami_med, m.specialite " +
+		"FROM \"Medecin\" m " +
+		"INNER JOIN \"Prescription\" p ON m.n_inami_med = p.n_inami_med " +
+		"INNER JOIN \"Medicament\" med ON p.nom_medic = med.nom_medic " +
+		"WHERE med.nom_pathologie NOT IN (" +
+		"FROM \"Pathologie\" " +
+		"WHERE nom_sys_ana = m.nom_sys_ana);"
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "6",
-		"subject": "La liste des médecins ayant prescrit des médicaments ne relevant pas de leur spécialité.",
+		"subject": "La liste des médecins ayant prescrit des médicaments ne relevant pas de leur spécialité.\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request6.html", data)
 }

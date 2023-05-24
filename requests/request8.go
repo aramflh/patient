@@ -12,17 +12,25 @@ Quelle est la pathologie la plus diagnostiqu ́ee ?
 
 func DoRequest8(c *gin.Context) {
 
-	type Result []string
-	var result Result
+	// Get the result of the query
+	var result string
+	var query string
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	query = "SELECT nom_pathologie, COUNT(*) AS total_diagnosis " +
+		"FROM \"Dossier_med\" " +
+		"GROUP BY nom_pathologie " +
+		"ORDER BY total_diagnosis DESC " +
+		"LIMIT 1; "
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "8",
 		"subject": "Quelle est la pathologie la plus diagnostiquée ?\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request8.html", data)
 }

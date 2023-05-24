@@ -12,18 +12,30 @@ La liste des pathologies qui peuvent être prise en charge par un seul type de s
 
 func DoRequest2(c *gin.Context) {
 
-	type Result []string
-	var result Result
+	// Get the result of the query
+	type querryResult []struct {
+		NomPatho  string
+		NomSpecia string
+	}
+	var result querryResult
+	var query string
 
-	initializers.DB.Raw("SELECT nom FROM \"Medecin\" ;").Scan(&result)
+	query = "SELECT p.nom_pathologie, m.specialite " +
+		"FROM \"Pathologie\" p " +
+		"INNER JOIN \"Medecin\" m ON p.nom_sys_ana = m.nom_sys_ana " +
+		"GROUP BY p.nom_pathologie, m.specialite " +
+		"HAVING COUNT(DISTINCT m.specialite) = 1;"
+
+	initializers.DB.Raw(query).Scan(&result)
 
 	data := gin.H{
+		"message": "",
 		"number":  "2",
 		"subject": "La liste des pathologies qui peuvent être prise en charge par un seul type de spécialistes.\n",
 		"result":  result,
-		"command": "SELECT nom_medic FROM \"Medicament\" ORDER BY  conditionnement, nom_medic;",
+		"command": query,
 	}
 
-	c.HTML(http.StatusOK, "request.html", data)
+	c.HTML(http.StatusOK, "request2.html", data)
 
 }

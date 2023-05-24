@@ -32,10 +32,13 @@ func main() {
 
 	/* SQL requests */
 	requestRoutes := r.Group("/requests")
+
 	requestRoutes.GET("/1", requests.DoRequest1)
+	requestRoutes.POST("/1", requests.DoRequest1)
 	requestRoutes.GET("/2", requests.DoRequest2)
 	requestRoutes.GET("/3", requests.DoRequest3)
 	requestRoutes.GET("/4", requests.DoRequest4)
+	requestRoutes.POST("/4", requests.DoRequest4)
 	requestRoutes.GET("/5", requests.DoRequest5)
 	requestRoutes.GET("/6", requests.DoRequest6)
 	requestRoutes.GET("/7", requests.DoRequest7)
@@ -69,6 +72,12 @@ func main() {
 	/* MY ACCOUNT */
 	r.GET("/account", middleware.RequireAuth, controllers.ManageAccountViewer)
 	r.POST("/account", middleware.RequireAuth, controllers.ManageAccount)
+
+	/* MY TREATEMENTS */
+	r.GET("/traitements", middleware.RequireAuth, controllers.TraitementViewer)
+
+	/* MY MED INFO */
+	//r.GET("/info-med", middleware.RequireAuth, controllers.InfoMedViewer)
 
 	// Run the server
 	if r.Run() != nil {

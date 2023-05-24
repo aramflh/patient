@@ -8,7 +8,8 @@
 <a href="/">Home</a>
 <h1>Mon compte</h1>
 
-
+<a href="/traitements">Mes  traitements</a>
+<!--<a href="/info-med">Mes informations médicales</a>-->
 <h3>Modifier compte</h3>
 <form action="/account" method="POST">
   <div>
@@ -29,15 +30,6 @@
   </div>
   <button type="submit">Save</button>
 </form>
-
-<h3>Mes traitements</h3>
-{{ range .traitements }}
-<p>{{ . }}</p>
-{{end}}
-<h3>Mes informations médicales</h3>
-{{ range .infoMed }}
-<p>{{ . }}</p>
-{{end}}
 
 </body>
 </html>

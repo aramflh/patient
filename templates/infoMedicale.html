@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes information médicales</title>
+</head>
+<body>
+<a href="/">Home</a>
+<p>{{ .message }}</p>
+<h1>{{ .subject }}</h1>
+{{ range .result }}
+<ul>
+  <li>Médicament: {{ .NomMedic }} - Date début: {{ .DateDebut }} - Durée: {{ .Duree }}</li>
+</ul>
+{{end}}
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes traitemens</title>
+</head>
+<body>
+<a href="/">Home</a>
+<p>{{ .message }}</p>
+<h1>{{ .subject }}</h1>
+{{ range .result }}
+<ul>
+  <li>Médicament: {{ .NomMedic }} - Date début: {{ .DateDebut }} - Durée: {{ .Duree }}</li>
+</ul>
+{{end}}
+</body>
+</html>
