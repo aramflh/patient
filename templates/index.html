@@ -8,16 +8,20 @@
 
 <p>{{ .message }}</p>
 
-<div  style="display:flex;justify-content: space-between";>
-    <div>
-        <a href="/login">Login</a>
+{{ if not .isConnected}}
 
-        <a href="/signup">Register</a>
-    </div>
-    <div>
-        <a href="/account">Mon compte</a>
-    </div>
+<a href="/login">Login</a>
+<a href="/signup">Register</a>
+
+{{ else }}
+
+<a href="/account">Mon compte</a>
+<div  style="display:flex;justify-content: end";>
+    <a href="/logout">Se déconnecter</a>
+
 </div>
+
+{{ end }}
 
 
 <br><br>
@@ -62,9 +66,7 @@
     </li>
 </ul>
 
-<div  style="display:flex;justify-content: end";>
-        <a href="/logout">Se déconnecter</a>
-</div>
+
 
 </body>
 </html>

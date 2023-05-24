@@ -8,6 +8,7 @@
 <a href="/">Home</a>
 <h1>Sign Up</h1>
 
+{{ if not .isConnected}}
 <form action="/signup" method="POST">
   <div>
     <label for="NISS">Numéro NISS</label>
@@ -64,6 +65,12 @@
 
   <button type="submit">Save</button>
 </form>
+
+{{ else }}
+<p>Vous possedez déja un compte</p>
+{{ end }}
+
+
 
 </body>
 </html>

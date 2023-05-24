@@ -37,7 +37,6 @@ func RequireAuth(c *gin.Context) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 
 		// Check the cookie expiration
-
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			fmt.Println("Token expired")
 			c.HTML(http.StatusUnauthorized, "index.html", gin.H{
@@ -47,7 +46,6 @@ func RequireAuth(c *gin.Context) {
 		}
 
 		// Find the user with the token sub
-
 		var activePatinentNISS string
 
 		// Transform the value of type []interface to type string (Specific to Go)
@@ -56,8 +54,6 @@ func RequireAuth(c *gin.Context) {
 				activePatinentNISS = fmt.Sprint(value)
 			}
 		}
-
-		// activePatinentNISS := claims["niss"]
 
 		// Attach to request
 		c.Set("activePatientNiss", strings.TrimSpace(activePatinentNISS))

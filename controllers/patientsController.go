@@ -14,11 +14,38 @@ import (
 const COOKIE_AGE int = 3600 * 24 * 30 // Cookie expire after 1 month
 const JWT_AGE = time.Hour * 24 * 30   // JWT token expire after 1 month
 
+// IndexViewer offers a html views for the home page
+func IndexViewer(c *gin.Context) {
+	var isConnected bool
+
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+	data := gin.H{
+		"message":     "",
+		"isConnected": isConnected,
+	}
+	c.HTML(http.StatusOK, "index.html", data)
+}
+
 // SignUpViewer offers a html views for signing up
 func SignUpViewer(c *gin.Context) {
 	type Result []string
 	var INAMIMedList Result
 	var INAMIPhaList Result
+	var isConnected bool
+
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
 
 	initializers.DB.Raw("SELECT inami FROM \"Medecin\" ;").Scan(&INAMIMedList)
 	initializers.DB.Raw("SELECT inami FROM \"Pharmacien\" ;").Scan(&INAMIPhaList)
@@ -26,12 +53,21 @@ func SignUpViewer(c *gin.Context) {
 	data := gin.H{
 		"INAMIMedList": INAMIMedList,
 		"INAMIPhaList": INAMIPhaList,
+		"isConnected":  isConnected,
 	}
 	c.HTML(http.StatusOK, "signUp.html", data)
 }
 
 // SignUp enables the user to create a patient account
 func SignUp(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
 	// Get patient data request body
 	var requestData struct {
 		NISS          string
@@ -48,7 +84,8 @@ func SignUp(c *gin.Context) {
 
 	if c.Bind(&requestData) != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Failed to read request",
+			"message":     "Failed to read request",
+			"isConnected": isConnected,
 		})
 		// Stop
 		return
@@ -59,7 +96,8 @@ func SignUp(c *gin.Context) {
 	// Check for an error
 	if hashErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Failed to hash password",
+			"message":     "Failed to hash password",
+			"isConnected": isConnected,
 		})
 		// Stop
 		return
@@ -84,23 +122,44 @@ func SignUp(c *gin.Context) {
 	// Check if an error occurred
 	if queryErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": queryErr,
+			"message":     queryErr,
+			"isConnected": isConnected,
 		})
 	} else {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"message": "Compte crée avec succès !",
+			"message":     "Compte crée avec succès !",
+			"isConnected": isConnected,
 		})
 	}
 }
 
 // LoginViewer offers a html views for logging in
 func LoginViewer(c *gin.Context) {
-	data := gin.H{}
+	var isConnected bool
+
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+	data := gin.H{
+		"isConnected": isConnected,
+	}
 	c.HTML(http.StatusOK, "login.html", data)
 }
 
 // Login enables the user to connect to its patient account
 func Login(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
 	// Get Email/Password of request body
 	var requestData struct {
 		Email    string
@@ -109,7 +168,8 @@ func Login(c *gin.Context) {
 
 	if c.Bind(&requestData) != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Failed to read request",
+			"message":     "Failed to read request",
+			"isConnected": isConnected,
 		})
 		// Stop
 		return
@@ -123,7 +183,8 @@ func Login(c *gin.Context) {
 
 	if currentNISS == "" {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Invalid email or passsword",
+			"message":     "Invalid email or passsword",
+			"isConnected": isConnected,
 		})
 		return
 	}
@@ -137,7 +198,8 @@ func Login(c *gin.Context) {
 
 	if hashErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Invalid email or passsword",
+			"message":     "Invalid email or passsword",
+			"isConnected": isConnected,
 		})
 		return
 	}
@@ -154,7 +216,8 @@ func Login(c *gin.Context) {
 
 	if tokenErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Failed to create token !",
+			"message":     "Failed to create token !",
+			"isConnected": isConnected,
 		})
 		return
 	}
@@ -163,27 +226,47 @@ func Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("PatientAuthorization", tokenString, COOKIE_AGE, "", "", false, true)
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message": "Connecté !",
+		"message":     "Connecté !",
+		"isConnected": isConnected,
 	})
 }
 
 // Logout deletes the cookies and logouts the patient
 func Logout(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
 	cookie, err := c.Cookie("PatientAuthorization")
 	if err != nil {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"message": "",
+			"message":     "Déja déconnecté !",
+			"isConnected": isConnected,
 		})
 		return
 	}
+	// Deleting the cookie
 	c.SetCookie("PatientAuthorization", cookie, -1, "", "", false, true)
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message": "Déconnecté !",
+		"message":     "Déconnecté !",
+		"isConnected": isConnected,
 	})
 }
 
 // ManageAccount enables the patient to modify medecin and/or pharmacien, and view its treatment and medical information
 func ManageAccount(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
 	// Get the active patient
 	activeNiss, _ := c.Get("activePatientNiss")
 	// Get patient data request body
@@ -194,7 +277,8 @@ func ManageAccount(c *gin.Context) {
 
 	if c.Bind(&requestData) != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": "Failed to read request",
+			"message":     "Failed to read request",
+			"isConnected": isConnected,
 		})
 		// Stop
 		return
@@ -211,11 +295,13 @@ func ManageAccount(c *gin.Context) {
 	// Check if an error occurred
 	if queryErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message": queryErr,
+			"message":     queryErr,
+			"isConnected": isConnected,
 		})
 	} else {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"message": "Compte modifié avec succès !",
+			"message":     "Compte modifié avec succès !",
+			"isConnected": isConnected,
 		})
 	}
 }

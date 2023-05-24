@@ -7,6 +7,7 @@
 <body>
 <a href="/">Home</a>
 <h1>Login in</h1>
+{{ if not .isConnected}}
 
 <form action="/login" method="POST">
   <div>
@@ -19,6 +20,8 @@
   </div>
   <button type="submit">Save</button>
 </form>
-
+{{ else }}
+<p>Vous êtes déja connecté</p>
+{{ end }}
 </body>
 </html>

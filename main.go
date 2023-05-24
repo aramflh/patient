@@ -28,11 +28,7 @@ func main() {
 	 *********************/
 
 	/* HOME */
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"message": "",
-		})
-	})
+	r.GET("/", controllers.IndexViewer)
 
 	/* SQL requests */
 	requestRoutes := r.Group("/requests")
