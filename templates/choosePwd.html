@@ -2,26 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login in</title>
+  <title>Sign Up</title>
 </head>
 <body>
 <a href="/">Home</a>
-<h1>Login in</h1>
-{{ if not .isConnected}}
+<h1>Sign Up</h1>
 
-<form action="/login" method="POST">
+{{ if not .isConnected}}
+<form action="/signup" method="POST">
   <div>
-    <label for="NISS">NISS</label>
+    <label for="NISS">Votre numéro NISS:</label>
     <input type="text" name="NISS" id="NISS">
   </div>
   <div>
-    <label for="Password">Password</label>
+    <label for="Password">Nouveau mot de passe:</label>
     <input type="password" name="Password" id="Password">
   </div>
+
+
   <button type="submit">Save</button>
 </form>
+
 {{ else }}
-<p>Vous êtes déja connecté</p>
+<p>Vous possedez déja un compte</p>
 {{ end }}
+
+
+
 </body>
 </html>

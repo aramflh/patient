@@ -17,7 +17,7 @@ print("Database connected successfully")
 prescriptions = []
 traitements = []
 
-with open("data\dossiers_patients.csv", "r", encoding='utf8') as dossier:
+with open("data/dossiers_patients.csv", "r", encoding='utf8') as dossier:
     reader = csv.DictReader(dossier)
     for row in reader:
         prescription = {"n_niss":row["NISS_patient"], "date_prescription":row["date_prescription"],"nom_commercial":row["medicament_nom_commercial"],"inami_med":row["inami_medecin"]}

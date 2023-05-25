@@ -11,11 +11,10 @@ import (
 func PharmaciensCreate(c *gin.Context) {
 	// Get data off requests
 	var pharmaData struct {
-		INAMI  string
-		Nom    string
-		Prenom string
-		Email  string
-		Num    string
+		INAMI string
+		Nom   string
+		Email string
+		Num   string
 	}
 
 	if c.Bind(&pharmaData) != nil {
@@ -27,10 +26,9 @@ func PharmaciensCreate(c *gin.Context) {
 	}
 
 	// Create a pharmacien
-	querry := fmt.Sprintf("INSERT INTO \"Pharmacien\" (inami, nom, prenom, a_mail, n_telephone) VALUES ('%s', '%s', '%s', '%s', '%s');",
+	querry := fmt.Sprintf("INSERT INTO \"Pharmacien\" (inami, nom, a_mail, n_telephone) VALUES ( '%s', '%s', '%s', '%s');",
 		pharmaData.INAMI,
 		pharmaData.Nom,
-		pharmaData.Prenom,
 		pharmaData.Email,
 		pharmaData.Num)
 

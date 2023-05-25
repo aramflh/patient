@@ -32,8 +32,8 @@ func IndexViewer(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", data)
 }
 
-// SignUpViewer offers a html views for signing up
-func SignUpViewer(c *gin.Context) {
+// AddPatientViewer offers a html views for adding a patient
+func AddPatientViewer(c *gin.Context) {
 	type Result []string
 	var INAMIMedList Result
 	var INAMIPhaList Result
@@ -55,11 +55,11 @@ func SignUpViewer(c *gin.Context) {
 		"INAMIPhaList": INAMIPhaList,
 		"isConnected":  isConnected,
 	}
-	c.HTML(http.StatusOK, "signUp.html", data)
+	c.HTML(http.StatusOK, "addPatient.html", data)
 }
 
-// SignUp enables the user to create a patient account
-func SignUp(c *gin.Context) {
+// AddPatient enables the user to create a patient account
+func AddPatient(c *gin.Context) {
 	var isConnected bool
 	// Check if the session cookie exist
 	_, cookieErr := c.Cookie("PatientAuthorization")
@@ -104,7 +104,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// Create the user
-	querry := fmt.Sprintf("INSERT INTO \"Patient\" (n_niss , nom, prenom, genre, date_naissance, a_mail, pwd, n_telephone, n_inami_med, n_inami_pha) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+	querry := fmt.Sprintf("INSERT INTO \"Patient\" (n_niss , nom, prenom, genre, date_naissance, a_mail, pwd, n_telephone, inami, n_inami_pha) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
 		requestData.NISS,
 		requestData.Nom,
 		requestData.Prenom,
@@ -128,6 +128,66 @@ func SignUp(c *gin.Context) {
 	} else {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"message":     "Compte crée avec succès !",
+			"isConnected": isConnected,
+		})
+	}
+}
+
+// ChoosePwd enable a patient to link a pwd to its niss number
+func ChoosePwd(c *gin.Context) {
+	// Get data off requests
+	var patientData struct {
+		NISS     string
+		Password string
+	}
+	if c.Bind(&patientData) != nil {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message": "Failed to read request",
+		})
+		// Stop
+		return
+	}
+
+	// Check if the session cookie exist
+	var isConnected bool
+
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+
+	// Hash the password
+	hash, hashErr := bcrypt.GenerateFromPassword([]byte(patientData.Password), 10)
+
+	// Check for an error
+	if hashErr != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     "Failed to hash password",
+			"isConnected": isConnected,
+		})
+		// Stop
+		return
+	}
+
+	// Change the pwd for the selected niss
+	querry := fmt.Sprintf("UPDATE \"Patient\" SET pwd = '%s' WHERE n_niss = '%s';",
+		string(hash),
+		patientData.NISS)
+
+	// Executes the query and get error if exist
+	queryErr := initializers.DB.Exec(querry).Error
+
+	// Check if an error occurred
+	if queryErr != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     queryErr,
+			"isConnected": isConnected,
+		})
+	} else {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message":     "Mot de passe associé avec succès",
 			"isConnected": isConnected,
 		})
 	}
@@ -162,7 +222,7 @@ func Login(c *gin.Context) {
 	}
 	// Get Email/Password of request body
 	var requestData struct {
-		Email    string
+		NISS     string
 		Password string
 	}
 
@@ -179,11 +239,11 @@ func Login(c *gin.Context) {
 
 	var currentNISS string
 
-	initializers.DB.Raw("SELECT n_niss FROM \"Patient\" WHERE  a_mail = $1;", requestData.Email).Scan(&currentNISS)
+	initializers.DB.Raw("SELECT n_niss FROM \"Patient\" WHERE  n_niss = $1;", requestData.NISS).Scan(&currentNISS)
 
 	if currentNISS == "" {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message":     "Invalid email or passsword",
+			"message":     "Invalid NISS or passsword",
 			"isConnected": isConnected,
 		})
 		return
@@ -192,13 +252,13 @@ func Login(c *gin.Context) {
 	// Compare sent in pwd with saved hashed pwd
 
 	var hashedPwd string
-	initializers.DB.Raw("SELECT pwd FROM \"Patient\" WHERE  a_mail = $1;", requestData.Email).Scan(&hashedPwd)
+	initializers.DB.Raw("SELECT pwd FROM \"Patient\" WHERE  n_niss = $1;", requestData.NISS).Scan(&hashedPwd)
 
 	hashErr := bcrypt.CompareHashAndPassword([]byte(hashedPwd), []byte(requestData.Password))
 
 	if hashErr != nil {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message":     "Invalid email or passsword",
+			"message":     "Invalid NISS or passsword",
 			"isConnected": isConnected,
 		})
 		return
@@ -209,7 +269,7 @@ func Login(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"niss": currentNISS,                    // Subjec of the token
-		"exp":  time.Now().Add(JWT_AGE).Unix(), // Expiration of the token: 1 month
+		"exp":  time.Now().Add(JWT_AGE).Unix(), // Expiration of the token
 	})
 
 	tokenString, tokenErr := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
@@ -284,7 +344,7 @@ func ManageAccount(c *gin.Context) {
 		return
 	}
 	// Update the user
-	querry := fmt.Sprintf("UPDATE \"Patient\" SET n_inami_med = '%s', n_inami_pha = '%s' WHERE n_niss = '%s';",
+	querry := fmt.Sprintf("UPDATE \"Patient\" SET inami = '%s', n_inami_pha = '%s' WHERE n_niss = '%s';",
 		requestData.INAMIMed,
 		requestData.INAMIPha,
 		activeNiss)
@@ -328,16 +388,14 @@ func TraitementViewer(c *gin.Context) {
 
 	// Get the result of the query
 	type querryResult []struct {
-		DateDebut string
+		DateVente string
 		Duree     string
 		NomMedic  string
 	}
 	var traitements querryResult
 	var query string
 
-	query = fmt.Sprintf("SELECT date_debut, duree_traitement, nom_medic "+
-		"FROM \"Traitement\" "+
-		"WHERE n_niss = '%s';",
+	query = fmt.Sprintf("SELECT t.date_vente as date_vente, t.duree_traitement as duree_traitement, p.nom_commercial as nom_commercial FROM \"Traitement\" t, \"Prescription\" p  WHERE p.id=t.id_prescription AND p.n_niss = '%s';",
 		activeNiss)
 
 	initializers.DB.Raw(query).Scan(&traitements)

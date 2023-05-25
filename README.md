@@ -1,5 +1,14 @@
 # Projet BD
 
+## Prepare the DB
+
+- Create a DB instance with credential
+```shell
+docker run --name dbtest -e POSTGRES_PASSWORD=root -e POSTGRES_USER=ayoub -e POSTGRES_DB=dbtest -p 5432:5432 -d postgres
+```
+
+- run the [script](bin) in order
+
 ## Features
 
 - [x] Ajouter un médecin
@@ -12,14 +21,16 @@
 
 
 ## Initialization
-0. Change [.env](.env) file with Postgres credentials
+0. Change [.env](.env) file with Postgres credentials if different
 
 1. [Install Go](https://go.dev/doc/install)
 
-2. Creates a new module
+2. Creates a new module if there is no [go.mod](go.mod) file
+
 ```Shell
-go mod init <module_path>
+go mod init patient
 ```
+
 3. Install dependacy
 ```Shell
 # ORM - Database management

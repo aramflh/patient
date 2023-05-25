@@ -46,6 +46,10 @@ func main() {
 	requestRoutes.GET("/9", requests.DoRequest9)
 	requestRoutes.GET("/10", requests.DoRequest10)
 
+	/* Add 'patient' */
+	r.GET("/patients", controllers.AddPatientViewer)
+	r.POST("/patients", controllers.AddPatient)
+
 	/* Add 'pharamcien' */
 	r.GET("/pharmaciens", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "addPharma.html", gin.H{})
@@ -58,9 +62,11 @@ func main() {
 	})
 	r.POST("/medecins", controllers.MedecinsCreate)
 
-	/* SIGN UP */
-	r.GET("/signup", controllers.SignUpViewer)
-	r.POST("/signup", controllers.SignUp)
+	/* Choose a password for a patient */
+	r.GET("/signup", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "choosePwd.html", gin.H{})
+	})
+	r.POST("/signup", controllers.ChoosePwd)
 
 	/* LOGIN */
 	r.GET("/login", controllers.LoginViewer)

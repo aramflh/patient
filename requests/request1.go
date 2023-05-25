@@ -43,10 +43,7 @@ func DoRequest1(c *gin.Context) {
 	var result querryResult
 	var query string
 
-	query = fmt.Sprintf("SELECT nom_medic "+
-		"FROM \"Medicament\" "+
-		"WHERE dci = '%s' "+
-		"ORDER BY nom_medic ASC, conditionnement ASC;",
+	query = fmt.Sprintf("SELECT nom_commercial FROM \"Medicament\" WHERE dci = '%s'ORDER BY nom_commercial ASC;",
 		requestData.DCI)
 
 	initializers.DB.Raw(query).Scan(&result)

@@ -13,7 +13,6 @@ func MedecinsCreate(c *gin.Context) {
 	var medData struct {
 		INAMI      string
 		Nom        string
-		Prenom     string
 		Email      string
 		Num        string
 		Specialite string
@@ -28,10 +27,9 @@ func MedecinsCreate(c *gin.Context) {
 	}
 
 	// Create a medecin
-	querry := fmt.Sprintf("INSERT INTO \"Medecin\" (inami , nom, prenom, a_mail, n_telephone, specialite) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
+	querry := fmt.Sprintf("INSERT INTO \"Medecin\" (inami , nom, a_mail, n_telephone, specialite) VALUES ('%s', '%s', '%s', '%s', '%s');",
 		medData.INAMI,
 		medData.Nom,
-		medData.Prenom,
 		medData.Email,
 		medData.Num,
 		medData.Specialite)
