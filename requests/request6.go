@@ -13,20 +13,21 @@ La liste des médecins ayant prescrit des médicaments ne relevant pas de leur s
 func DoRequest6(c *gin.Context) {
 
 	// Get the result of the query
-	type querryResult []struct {
-		INAMI      string
-		Specialite string
+	type querryResult struct {
+		Nom   string `gorm:"column:nom"`
+		INAMI string `gorm:"column:inami"`
 	}
-	var result querryResult
+	var result []querryResult
 	var query string
 
-	query = "SELECT DISTINCT m.n_inami_med, m.specialite " +
+	query = "SELECT DISTINCT m.nom, m.inami " +
 		"FROM \"Medecin\" m " +
-		"INNER JOIN \"Prescription\" p ON m.n_inami_med = p.n_inami_med " +
-		"INNER JOIN \"Medicament\" med ON p.nom_medic = med.nom_medic " +
-		"WHERE med.nom_pathologie NOT IN (SELECT nom_pathologie " +
-		"FROM \"Pathologie\" " +
-		"WHERE nom_sys_ana = m.nom_sys_ana);"
+		"INNER JOIN \"Prescription\" pr ON m.inami = pr.inami_med " +
+		"INNER JOIN \"Medicament\" med ON pr.nom_commercial = med.nom_commercial " +
+		"WHERE med.nom_sys_ana NOT IN ( " +
+		"SELECT ss.nom_sys_ana " +
+		"FROM \"Specialite_systeme_ana\" ss " +
+		"WHERE ss.specialite = m.specialite );"
 
 	initializers.DB.Raw(query).Scan(&result)
 

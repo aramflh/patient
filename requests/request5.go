@@ -44,7 +44,7 @@ func DoRequest5(c *gin.Context) {
 		"INNER JOIN \"Traitement\" t ON t.id_prescription = pr.id "+
 		"INNER JOIN \"Medicament\" m ON pr.nom_commercial = m.nom_commercial "+
 		"WHERE m.dci = '%s' "+
-		"AND t.date_vente < CURRENT_DATE - t.duree_traitement;",
+		"AND t.date_vente < CURRENT_DATE - t.duree_traitement::int;",
 		requestData.DCI)
 
 	initializers.DB.Raw(query).Scan(&result)

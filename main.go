@@ -79,13 +79,20 @@ func main() {
 
 	/* MY ACCOUNT */
 	r.GET("/account", middleware.RequireAuth, controllers.ManageAccountViewer)
-	r.POST("/account", middleware.RequireAuth, controllers.ManageAccount)
 
 	/* MY TREATEMENTS */
 	r.GET("/traitements", middleware.RequireAuth, controllers.TraitementViewer)
 
-	/* MY MED INFO */
-	//r.GET("/info-med", middleware.RequireAuth, controllers.InfoMedViewer)
+	/* MY INFO */
+	r.GET("/info-med", middleware.RequireAuth, controllers.InfoMedViewer)
+
+	/* CHANGE medecin */
+	r.GET("/update-med", middleware.RequireAuth, controllers.UpdateMedViewer)
+	r.POST("/update-med", middleware.RequireAuth, controllers.UpdateMed)
+
+	/* CHANGE pharamcien */
+	r.GET("/update-pha", middleware.RequireAuth, controllers.UpdatePhaViewer)
+	r.POST("/update-pha", middleware.RequireAuth, controllers.UpdatePha)
 
 	// Run the server
 	if r.Run() != nil {

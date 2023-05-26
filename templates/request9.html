@@ -10,7 +10,7 @@
 <h1>{{ .subject }}</h1>
 {{ range .result }}
 <ul>
-  <li>Patient: {{.NISS }} {{.Prenom }} {{.Nom }} - Nombre de médecin: {{ .NbrMed }}</li>
+  <li>{{.Prenom }} {{.Nom }} ({{.NISS }}) - {{ .NbrMed }} médecin(s)</li>
 </ul>
 {{end}}
 </body>

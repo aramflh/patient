@@ -13,21 +13,25 @@ e par des patients n ́es durant cette d ́ecennie.*/
 func DoRequest7(c *gin.Context) {
 
 	// Get the result of the query
-	type querryResult []struct {
-		Decade   string
-		NomMedic string
+	type querryResult struct {
+		Decade   string `gorm:"column:decade"`
+		NomMedic string `gorm:"column:medicament"`
+		Conso    int    `gorm:"column:consommation"`
 	}
-	var result querryResult
+	var result []querryResult
 	var query string
 
-	query = "SELECT SUBSTRING(YEAR(date_naissance), 1, 3) || '0s' AS decade, nom_medic " +
+	query = "SELECT DISTINCT ON (decade) CONCAT(EXTRACT(DECADE FROM " +
+		"p.date_naissance)*10::INT, ' - ', (EXTRACT(DECADE FROM " +
+		"p.date_naissance)*10 + 9)::INT) AS decade,m.nom_commercial AS  " +
+		"medicament, COUNT(*) AS consommation " +
 		"FROM \"Patient\" p " +
 		"INNER JOIN \"Prescription\" pr ON p.n_niss = pr.n_niss " +
-		"INNER JOIN \"Medicament\" m ON pr.nom_medic = m.nom_medic " +
-		"WHERE YEAR(date_naissance) BETWEEN 1950 AND 2020 " +
-		"GROUP BY decade " +
-		"HAVING COUNT(*) > 0 " +
-		"ORDER BY decade; "
+		"INNER JOIN \"Medicament\" m ON pr.nom_commercial =  " +
+		"m.nom_commercial " +
+		"WHERE EXTRACT(YEAR from p.date_naissance) BETWEEN 1950 AND 2019 " +
+		"GROUP BY decade,medicament " +
+		"ORDER BY decade, consommation desc; "
 
 	initializers.DB.Raw(query).Scan(&result)
 

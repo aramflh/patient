@@ -14,7 +14,6 @@ import (
 const COOKIE_AGE int = 3600 // Cookie expire after 1 hour
 const JWT_AGE = time.Hour   // JWT token expire after 1 hour
 
-// IndexViewer offers a html views for the home page
 func IndexViewer(c *gin.Context) {
 	var isConnected bool
 
@@ -32,7 +31,6 @@ func IndexViewer(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", data)
 }
 
-// AddPatientViewer offers a html views for adding a patient
 func AddPatientViewer(c *gin.Context) {
 	type Result []string
 	var INAMIMedList Result
@@ -193,7 +191,6 @@ func ChoosePwd(c *gin.Context) {
 	}
 }
 
-// LoginViewer offers a html views for logging in
 func LoginViewer(c *gin.Context) {
 	var isConnected bool
 
@@ -317,55 +314,6 @@ func Logout(c *gin.Context) {
 	})
 }
 
-// ManageAccount enables the patient to modify medecin and/or pharmacien, and view its treatment and medical information
-func ManageAccount(c *gin.Context) {
-	var isConnected bool
-	// Check if the session cookie exist
-	_, cookieErr := c.Cookie("PatientAuthorization")
-	if cookieErr != nil {
-		isConnected = false
-	} else {
-		isConnected = true
-	}
-	// Get the active patient
-	activeNiss, _ := c.Get("activePatientNiss")
-	// Get patient data request body
-	var requestData struct {
-		INAMIMed string
-		INAMIPha string
-	}
-
-	if c.Bind(&requestData) != nil {
-		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message":     "Failed to read request",
-			"isConnected": isConnected,
-		})
-		// Stop
-		return
-	}
-	// Update the user
-	querry := fmt.Sprintf("UPDATE \"Patient\" SET inami = '%s', n_inami_pha = '%s' WHERE n_niss = '%s';",
-		requestData.INAMIMed,
-		requestData.INAMIPha,
-		activeNiss)
-
-	// Executes the query and get error if exist
-	queryErr := initializers.DB.Exec(querry).Error
-
-	// Check if an error occurred
-	if queryErr != nil {
-		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"message":     queryErr,
-			"isConnected": isConnected,
-		})
-	} else {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"message":     "Compte modifié avec succès !",
-			"isConnected": isConnected,
-		})
-	}
-}
-
 // ManageAccountViewer  offers a html views for the page account
 func ManageAccountViewer(c *gin.Context) {
 
@@ -388,14 +336,16 @@ func TraitementViewer(c *gin.Context) {
 
 	// Get the result of the query
 	type querryResult struct {
-		DateVente string `gorm:"column:date_vente"`
+		DateDebut string `gorm:"column:date_vente"`
 		Duree     string `gorm:"column:duree_traitement"`
 		NomMedic  string `gorm:"column:nom_commercial"`
+		NomMed    string `gorm:"column:nom"`
+		INAMIMed  string `gorm:"column:inami"`
 	}
 	var traitements []querryResult
 	var query string
 
-	query = fmt.Sprintf("SELECT t.date_vente as date_vente, t.duree_traitement as duree_traitement, p.nom_commercial as nom_commercial FROM \"Traitement\" t, \"Prescription\" p  WHERE p.id=t.id_prescription AND p.n_niss = '%s';",
+	query = fmt.Sprintf("SELECT CONCAT(EXTRACT(DAY FROM t.date_vente), '-', (EXTRACT(MONTH FROM t.date_vente)) , '-', (EXTRACT(YEAR FROM t.date_vente)) ) as date_vente, t.duree_traitement as duree_traitement, p.nom_commercial as nom_commercial, m.nom as nom, p.inami_med as inami  FROM \"Traitement\" t, \"Prescription\" p, \"Medecin\" m WHERE p.id=t.id_prescription AND p.inami_med=m.inami AND p.n_niss = '%s';",
 		activeNiss)
 
 	initializers.DB.Raw(query).Scan(&traitements)
@@ -406,4 +356,182 @@ func TraitementViewer(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "traitements.html", data)
+}
+
+func InfoMedViewer(c *gin.Context) {
+	activeNiss, _ := c.Get("activePatientNiss")
+
+	// Get the result of the query
+	type querryResult struct {
+		NISS          string `gorm:"column:niss"`
+		Nom           string `gorm:"column:nom"`
+		Prenom        string `gorm:"column:prenom"`
+		Genre         string `gorm:"column:genre"`
+		DateNaissance string `gorm:"column:date_naissance"`
+		Mail          string `gorm:"column:mail"`
+		Tel           string `gorm:"column:num"`
+		INAMIMed      string `gorm:"column:inami_med"`
+		NomMed        string `gorm:"column:med_nom"`
+		TelMed        string `gorm:"column:med_tel"`
+		MailMed       string `gorm:"column:med_mail"`
+		INAMIPha      string `gorm:"column:inami_pha"`
+		NomPha        string `gorm:"column:pha_nom"`
+		TelPha        string `gorm:"column:pha_tel"`
+		MailPha       string `gorm:"column:pha_mail"`
+	}
+	var info []querryResult
+	var query string
+
+	query = fmt.Sprintf("SELECT p.n_niss as niss, p.nom as nom, p.prenom as prenom, p.genre as genre, "+
+		" CONCAT(EXTRACT(DAY FROM p.date_naissance), '-', (EXTRACT(MONTH FROM p.date_naissance)) , '-', (EXTRACT(YEAR FROM p.date_naissance)) ) "+
+		"as date_naissance, p.a_mail as mail, p.n_telephone as num, p.inami as inami_med, p.n_inami_pha as inami_pha, "+
+		"m.nom as med_nom, m.n_telephone as med_tel, m.a_mail as med_mail, ph.nom as pha_nom, ph.n_telephone as pha_tel, "+
+		"ph.a_mail as pha_mail FROM \"Patient\" p, \"Medecin\" m, \"Pharmacien\" ph WHERE p.inami=m.inami AND "+
+		"p.n_inami_pha=ph.inami AND  p.n_niss = '%s';",
+		activeNiss)
+
+	initializers.DB.Raw(query).Scan(&info)
+
+	data := gin.H{
+		"message": "",
+		"result":  info,
+	}
+
+	c.HTML(http.StatusOK, "infoMed.html", data)
+}
+
+// UpdateMed enables to changes doctor inami
+func UpdateMed(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+	// Get the active patient
+	activeNiss, _ := c.Get("activePatientNiss")
+	// Get patient data request body
+	var requestData struct {
+		INAMIMed string
+	}
+
+	if c.Bind(&requestData) != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     "Failed to read request",
+			"isConnected": isConnected,
+		})
+		// Stop
+		return
+	}
+	// Update the user
+	querry := fmt.Sprintf("UPDATE \"Patient\" SET inami = '%s' WHERE n_niss = '%s';",
+		requestData.INAMIMed,
+		activeNiss)
+
+	// Executes the query and get error if exist
+	queryErr := initializers.DB.Exec(querry).Error
+
+	// Check if an error occurred
+	if queryErr != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     queryErr,
+			"isConnected": isConnected,
+		})
+	} else {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message":     "Compte modifié avec succès !",
+			"isConnected": isConnected,
+		})
+	}
+}
+
+func UpdateMedViewer(c *gin.Context) {
+	type Result []string
+	var INAMIMedList Result
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+
+	initializers.DB.Raw("SELECT inami FROM \"Medecin\" ;").Scan(&INAMIMedList)
+	data := gin.H{
+		"INAMIMedList": INAMIMedList,
+		"isConnected":  isConnected,
+	}
+	c.HTML(http.StatusOK, "updateMed.html", data)
+
+}
+
+// UpdateMed enables to changes doctor inami
+func UpdatePha(c *gin.Context) {
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+	// Get the active patient
+	activeNiss, _ := c.Get("activePatientNiss")
+	// Get patient data request body
+	var requestData struct {
+		INAMIPha string
+	}
+
+	if c.Bind(&requestData) != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     "Failed to read request",
+			"isConnected": isConnected,
+		})
+		// Stop
+		return
+	}
+	// Update the user
+	querry := fmt.Sprintf("UPDATE \"Patient\" SET n_inami_pha = '%s' WHERE n_niss = '%s';",
+		requestData.INAMIPha,
+		activeNiss)
+
+	// Executes the query and get error if exist
+	queryErr := initializers.DB.Exec(querry).Error
+
+	// Check if an error occurred
+	if queryErr != nil {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"message":     queryErr,
+			"isConnected": isConnected,
+		})
+	} else {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"message":     "Compte modifié avec succès !",
+			"isConnected": isConnected,
+		})
+	}
+}
+
+func UpdatePhaViewer(c *gin.Context) {
+	type Result []string
+	var INAMIPhaList Result
+	var isConnected bool
+	// Check if the session cookie exist
+	_, cookieErr := c.Cookie("PatientAuthorization")
+	if cookieErr != nil {
+		isConnected = false
+	} else {
+		isConnected = true
+	}
+
+	initializers.DB.Raw("SELECT inami FROM \"Pharmacien\" ;").Scan(&INAMIPhaList)
+	data := gin.H{
+		"INAMIPhaList": INAMIPhaList,
+		"isConnected":  isConnected,
+	}
+	c.HTML(http.StatusOK, "updatePha.html", data)
+
 }

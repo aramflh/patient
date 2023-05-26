@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mon compte</title>
+</head>
+<body>
+<a href="/">Home</a>
+<h1>Mon pharmacien de référence</h1>
+
+<form action="/update-pha" method="POST">
+  <div>
+    <label for="INAMIPha">Changer l'INAMI du pharmacien</label>
+    <select name="INAMIPha" id="INAMIPha">
+      {{ range .INAMIPhaList }}
+      <option value={{ . }}>{{ . }}</option>
+      {{end}}
+    </select>
+  </div>
+  <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

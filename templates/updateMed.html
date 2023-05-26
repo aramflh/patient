@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon compte</title>
+</head>
+<body>
+<a href="/">Home</a>
+
+<h3>Modifier mon médecin de référence</h3>
+<form action="/update-med" method="POST">
+    <div>
+        <label for="INAMIMed">Changer l'INAMI du médecin</label>
+        <select name="INAMIMed" id="INAMIMed">
+            {{ range .INAMIMedList }}
+            <option value={{ . }}>{{ . }}</option>
+            {{end}}
+        </select>
+    </div>
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

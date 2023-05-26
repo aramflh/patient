@@ -48,7 +48,7 @@ func DoRequest1(c *gin.Context) {
 		"FROM \"Medicament\" m "+
 		"INNER JOIN \"Medicament_conditionnement\" mc on m.nom_commercial = mc.nom_commercial "+
 		"WHERE dci = '%s' "+
-		"ORDER BY m.nom_commercial ASC, mc.quantite DESC; ",
+		"ORDER BY m.nom_commercial ASC, mc.quantite ASC; ",
 		requestData.DCI)
 
 	initializers.DB.Raw(query).Scan(&result)

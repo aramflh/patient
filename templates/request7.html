@@ -9,9 +9,13 @@
 <p>{{ .message }}</p>
 <h1>{{ .subject }}</h1>
 {{ range .result }}
-<ul>
-  <li>Décennie: {{.Decade }} - Médicament: {{ .NomMedic }}</li>
-</ul>
+<h3>{{.Decade }}</h3>
+<p>
+  Médicament: {{ .NomMedic }}
+</p>
+<p>
+  Consommation: {{ .Conso }}
+</p>
 {{end}}
 </body>
 </html>

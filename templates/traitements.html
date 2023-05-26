@@ -7,11 +7,15 @@
 <body>
 <a href="/">Home</a>
 <p>{{ .message }}</p>
-<h1>{{ .subject }}</h1>
+<h1>Mes triatements</h1>
 {{ range .result }}
+<h3>Médicaments: {{ .NomMedic }}</h3>
 <ul>
-  <li>Médicament: {{ .NomMedic }} - Date début: {{ .DateVente }} - Durée: {{ .Duree }}</li>
+  <li>Date de début du traitement: {{ .DateDebut }}</li>
+  <li>Durée: {{ .Duree }}</li>
+  <li>Prescript par: {{.NomMed}} ({{.INAMIMed}})</li>
 </ul>
+
 {{end}}
 </body>
 </html>

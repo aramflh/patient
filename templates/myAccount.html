@@ -8,28 +8,10 @@
 <a href="/">Home</a>
 <h1>Mon compte</h1>
 
-<a href="/traitements">Mes  traitements</a>
-<!--<a href="/info-med">Mes informations médicales</a>-->
-<h3>Modifier compte</h3>
-<form action="/account" method="POST">
-  <div>
-    <label for="INAMIMed">Changer l'INAMI du médecin</label>
-    <select name="INAMIMed" id="INAMIMed">
-      {{ range .INAMIMedList }}
-      <option value={{ . }}>{{ . }}</option>
-      {{end}}
-    </select>
-  </div>
-  <div>
-    <label for="INAMIPha">Changer l'INAMI du pharmacien</label>
-    <select name="INAMIPha" id="INAMIPha">
-      {{ range .INAMIPhaList }}
-      <option value={{ . }}>{{ . }}</option>
-      {{end}}
-    </select>
-  </div>
-  <button type="submit">Save</button>
-</form>
+<a href="/traitements">Mes  traitements</a> <br><br>
+<a href="/info-med">Mes informations médicales</a> <br><br>
+<a href="/update-med">Changer l'inami de mon médecin</a> <br><br>
+<a href="/update-pha">Changer l'inami de mon pharmacien</a>
 
 </body>
 </html>

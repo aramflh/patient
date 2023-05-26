@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes informations médicales</title>
+</head>
+<body>
+<a href="/">Home</a>
+<p>{{ .message }}</p>
+<h1>Mes informations médicales</h1>
+{{ range .result }}
+<h3>Profil</h3>
+<ul>
+  <li>n° NISS: {{ .NISS }}</li>
+  <li>Nom: {{ .Nom }}</li>
+  <li>Prenom: {{ .Prenom}}</li>
+  <li>Genre: {{ .Genre}}</li>
+  <li>Date de naissance: {{ .DateNaissance}}</li>
+  <li>Mail: {{ .Mail}}</li>
+  <li>Tel: {{ .Tel}}</li>
+</ul>
+
+<h3>Médecin de référence</h3>
+<ul>
+  <li>Nom: {{ .NomMed }}</li>
+  <li>n° INAMI: {{ .INAMIMed }}</li>
+  <li>Numéro de téléphone: {{.TelMed}}</li>
+  <li>Adresse mail: {{.MailMed}}</li>
+</ul>
+
+<h3>Pharmacien de référence</h3>
+<ul>
+  <li>Nom: {{ .NomPha }}</li>
+  <li>n° INAMI: {{ .INAMIPha }}</li>
+  <li>Numéro de téléphone: {{.TelPha}}</li>
+  <li>Adresse mail: {{.MailPha}}</li>
+</ul>
+
+{{end}}
+</body>
+</html>
