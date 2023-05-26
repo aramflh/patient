@@ -40,11 +40,13 @@ func main() {
 	requestRoutes.GET("/4", requests.DoRequest4)
 	requestRoutes.POST("/4", requests.DoRequest4)
 	requestRoutes.GET("/5", requests.DoRequest5)
+	requestRoutes.POST("/5", requests.DoRequest5)
 	requestRoutes.GET("/6", requests.DoRequest6)
 	requestRoutes.GET("/7", requests.DoRequest7)
 	requestRoutes.GET("/8", requests.DoRequest8)
 	requestRoutes.GET("/9", requests.DoRequest9)
 	requestRoutes.GET("/10", requests.DoRequest10)
+	requestRoutes.POST("/10", requests.DoRequest10)
 
 	/* Add 'patient' */
 	r.GET("/patients", controllers.AddPatientViewer)

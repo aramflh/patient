@@ -37,16 +37,23 @@ func DoRequest1(c *gin.Context) {
 		"FROM \"Medicament\" ;").Scan(&AllDCIname)
 
 	// Get the result of the query
-	type querryResult []struct {
-		Nom string
+	type Result struct {
+		Nom      string `gorm:"column:nom_commercial"`
+		Quantite int    `gorm:"column:quantite"`
 	}
-	var result querryResult
+	var result []Result
 	var query string
 
-	query = fmt.Sprintf("SELECT nom_commercial FROM \"Medicament\" WHERE dci = '%s'ORDER BY nom_commercial ASC;",
+	query = fmt.Sprintf("SELECT m.nom_commercial, mc.quantite "+
+		"FROM \"Medicament\" m "+
+		"INNER JOIN \"Medicament_conditionnement\" mc on m.nom_commercial = mc.nom_commercial "+
+		"WHERE dci = '%s' "+
+		"ORDER BY m.nom_commercial ASC, mc.quantite DESC; ",
 		requestData.DCI)
 
 	initializers.DB.Raw(query).Scan(&result)
+
+	fmt.Println(result)
 
 	data := gin.H{
 		"message":    "",

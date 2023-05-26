@@ -13,11 +13,15 @@ Quelle est la pathologie la plus diagnostiqu ́ee ?
 func DoRequest8(c *gin.Context) {
 
 	// Get the result of the query
-	var result string
+	type Result struct {
+		NomPatho string `gorm:"column:nom_pathologie"`
+		Quantite int    `gorm:"column:total_diagnosis"`
+	}
+	var result []Result
 	var query string
 
 	query = "SELECT nom_pathologie, COUNT(*) AS total_diagnosis " +
-		"FROM \"Dossier_med\" " +
+		"FROM \"Diagnostic\" " +
 		"GROUP BY nom_pathologie " +
 		"ORDER BY total_diagnosis DESC " +
 		"LIMIT 1; "

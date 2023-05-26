@@ -22,8 +22,9 @@
 <p>Nom DCI choisi pour la recherche: {{ .currentDCI }}</p>
 {{ range .result }}
 <ul>
-    <li>Nom: {{ .Nom }}</li>
+    <li>{{ .Nom  }}  {{ .Quantite  }}</li>
 </ul>
 {{end}}
+
 </body>
 </html>

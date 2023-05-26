@@ -8,6 +8,14 @@
 <a href="/">Home</a>
 <p>{{ .message }}</p>
 <h1>{{ .subject }}</h1>
+<form action="/requests/10" method="POST">
+  <div>
+    <label for="DateChoice">Date: </label>
+    <input type="date" id="DateChoice" name="DateChoice">
+  </div>
+  <button type="submit">Save</button>
+</form>
+
 {{ range .result }}
 <ul>
   <li>{{ .NomMedic }} </li>

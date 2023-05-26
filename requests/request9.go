@@ -13,16 +13,16 @@ Pour chaque patient, le nombre de m ́edecin lui ayant prescrit un m ́edicament
 func DoRequest9(c *gin.Context) {
 
 	// Get the result of the query
-	type querryResult []struct {
-		NISS   string
-		Nom    string
-		Prenom string
-		NbrMed int // ??
+	type querryResult struct {
+		NISS   string `gorm:"column:n_niss"`
+		Nom    string `gorm:"column:nom"`
+		Prenom string `gorm:"column:prenom"`
+		NbrMed int    `gorm:"column:nombre_medecins"`
 	}
-	var result querryResult
+	var result []querryResult
 	var query string
 
-	query = "SELECT p.n_niss, p.nom, p.prenom, COUNT(DISTINCT pr.n_inami_med) AS nombre_medecins " +
+	query = "SELECT p.n_niss, p.nom, p.prenom, COUNT(DISTINCT pr.inami_med) AS nombre_medecins " +
 		"FROM \"Patient\" p " +
 		"INNER JOIN \"Prescription\" pr ON p.n_niss = pr.n_niss " +
 		"GROUP BY p.n_niss, p.nom, p.prenom; "

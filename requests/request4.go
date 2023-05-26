@@ -16,37 +16,41 @@ func DoRequest4(c *gin.Context) {
 	// Get data from the POST request
 	var requestData struct {
 		MedName string
+		DateMed string
 	}
 	// Check if data received
 	if c.Bind(&requestData) != nil {
-		c.HTML(http.StatusBadRequest, "request1.html", gin.H{
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"message": "Failed to read request",
 		})
 		// Stop
 		return
 	}
+	fmt.Println(requestData)
 
 	// Get all the medicamen name from DB
 	type listString []string
 	var AllMedicaname listString
-	initializers.DB.Raw("SELECT nom_medic " +
+	initializers.DB.Raw("SELECT nom_commercial " +
 		"FROM \"Medicament\" ;").Scan(&AllMedicaname)
 
 	// Get the result of the query
-	type querryResult []struct {
-		Nom    string
-		Prenom string
+	type querryResult struct {
+		Nom    string `gorm:"column:nom"`
+		Prenom string `gorm:"column:prenom"`
 	}
-	var result querryResult
+	var result []querryResult
 	var query string
 
 	query = fmt.Sprintf("SELECT DISTINCT p.nom, p.prenom "+
 		"FROM \"Patient\" p "+
 		"INNER JOIN \"Prescription\" pr ON p.n_niss = pr.n_niss "+
-		"INNER JOIN \"Medicament\" m ON pr.nom_medic = m.nom_medic "+
-		"WHERE m.nom_medic = '%s' "+
-		"AND pr.date_emission > 'Date_donnee'; ",
-		requestData.MedName)
+		"INNER JOIN \"Medicament\" m ON pr.nom_commercial = m.nom_commercial "+
+		"INNER JOIN \"Traitement\" t ON t.id_prescription = pr.id "+
+		"WHERE m.nom_commercial = '%s' "+
+		"AND t.date_vente > '%s';",
+		requestData.MedName,
+		requestData.DateMed)
 
 	initializers.DB.Raw(query).Scan(&result)
 

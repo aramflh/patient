@@ -8,8 +8,10 @@
 <a href="/">Home</a>
 <p>{{ .message }}</p>
 <h1>{{ .subject }}</h1>
-<ul>
-  <li>{{.result }}</li>
-</ul>
+
+  {{range .result }}
+  <p>{{ .NomPatho }} {{.Quantite }}</p>
+  {{ end }}
+
 </body>
 </html>

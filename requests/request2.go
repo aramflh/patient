@@ -13,18 +13,18 @@ La liste des pathologies qui peuvent être prise en charge par un seul type de s
 func DoRequest2(c *gin.Context) {
 
 	// Get the result of the query
-	type querryResult []struct {
-		NomPatho  string
-		NomSpecia string
+	type querryResult struct {
+		NomPatho  string `gorm:"column:nom_pathologie"`
+		NomSpecia string `gorm:"column:specialite"`
 	}
-	var result querryResult
+	var result []querryResult
 	var query string
 
-	query = "SELECT p.nom_pathologie, m.specialite " +
+	query = "SELECT p.nom_pathologie, s.specialite " +
 		"FROM \"Pathologie\" p " +
-		"INNER JOIN \"Medecin\" m ON p.nom_sys_ana = m.nom_sys_ana " +
-		"GROUP BY p.nom_pathologie, m.specialite " +
-		"HAVING COUNT(DISTINCT m.specialite) = 1;"
+		"INNER JOIN \"Pathologie_specialite\" s ON p.nom_pathologie = s.nom_pathologie " +
+		"GROUP BY p.nom_pathologie, s.specialite " +
+		"HAVING COUNT(DISTINCT s.specialite) = 1;"
 
 	initializers.DB.Raw(query).Scan(&result)
 

@@ -387,12 +387,12 @@ func TraitementViewer(c *gin.Context) {
 	activeNiss, _ := c.Get("activePatientNiss")
 
 	// Get the result of the query
-	type querryResult []struct {
-		DateVente string
-		Duree     string
-		NomMedic  string
+	type querryResult struct {
+		DateVente string `gorm:"column:date_vente"`
+		Duree     string `gorm:"column:duree_traitement"`
+		NomMedic  string `gorm:"column:nom_commercial"`
 	}
-	var traitements querryResult
+	var traitements []querryResult
 	var query string
 
 	query = fmt.Sprintf("SELECT t.date_vente as date_vente, t.duree_traitement as duree_traitement, p.nom_commercial as nom_commercial FROM \"Traitement\" t, \"Prescription\" p  WHERE p.id=t.id_prescription AND p.n_niss = '%s';",
@@ -407,33 +407,3 @@ func TraitementViewer(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "traitements.html", data)
 }
-
-/*
-func InfoMedViewer(c *gin.Context) {
-	activeNiss, _ := c.Get("activePatientNiss")
-
-	// Get the result of the query
-	type querryResult []struct {
-		DateDebut string
-		Duree     string
-		NomMedic  string
-	}
-	var info querryResult
-	var query string
-
-	query = fmt.Sprintf("SELECT date_debut, duree_traitement, nom_medic "+
-		"FROM \"Traitement\" "+
-		"WHERE n_niss = '%s';",
-		activeNiss)
-
-	initializers.DB.Raw(query).Scan(&info)
-
-	data := gin.H{
-		"message": "",
-		"result":  info,
-	}
-
-	c.HTML(http.StatusOK, "infoMedicale.html", data)
-}
-
-*/

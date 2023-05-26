@@ -8,6 +8,18 @@
 <a href="/">Home</a>
 <p>{{ .message }}</p>
 <h1>{{ .subject }}</h1>
+<form action="/requests/5" method="POST">
+  <div>
+    <label for="DCI">Nom DCI</label>
+    <select name="DCI" id="DCI">
+      {{ range .AllDCIname }}
+      <option value={{ . }}>{{ . }}</option>
+      {{end}}
+    </select>
+  </div>
+  <button type="submit">Save</button>
+</form>
+
 {{ range .result }}
 <ul>
   <li>Nom: {{.Nom }} - Prenom: {{ .Prenom }}</li>

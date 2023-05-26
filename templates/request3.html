@@ -8,8 +8,12 @@
 <a href="/">Home</a>
 <p>{{ .message }}</p>
 <h1>{{ .subject }}</h1>
-<ul>
-  <li>{{.result }}</li>
-</ul>
+{{ range .result }}
+
+  <p> {{.Specialite }} -  Nombre de médicaments prescrits: {{ .Quantite }}</p>
+
+{{end}}
+
+
 </body>
 </html>
