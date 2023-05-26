@@ -103,7 +103,7 @@ def ddl():
 				CREATE TABLE "Traitement"(
 					id SERIAL PRIMARY KEY,
 					date_vente date,
-					duree_traitement VARCHAR,
+					duree_traitement INTEGER,
 					id_prescription SERIAL,
                     inami_pha VARCHAR,
 					CONSTRAINT fk_id_prescription FOREIGN KEY (id_prescription) REFERENCES "Prescription"(id),
